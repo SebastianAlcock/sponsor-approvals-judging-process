@@ -1,12 +1,67 @@
-from flask import Flask, jsonify
+from flask import Flask, request, jsonify
 from flask_cors import CORS
+from db import Session
+from models import User
 
 app = Flask(__name__)
-CORS(app)  # Allow frontend communication
+CORS(app)
 
 @app.route("/")
 def home():
     return jsonify({"message": "Flask Backend is Running!"})
 
-if __name__ == "__main__":
+@app.route('/register-student', methods=['POST'])
+def register_student():
+    data = request.get_json()
+    session = Session()
+
+    try:
+        new_student = User(
+            first_name=data['first_name'],
+            last_name=data['last_name'],
+            email=data['email'],
+            phone=data['phone'],
+            role='student',
+            major=data['major'],
+            minor=data['minor'],
+            specialization=data['specialization']
+        )
+        session.add(new_student)
+        session.commit()
+        return jsonify({"message": "Student registered successfully!"}), 201
+    except Exception as e:
+        session.rollback()
+        return jsonify({"error": str(e)}), 400
+    finally:
+        session.close()
+
+@app.route('/register-sponsor', methods=['POST'])
+def register_sponsor():
+    data = request.get_json()
+    session = Session()
+
+    try:
+        new_sponsor = User(
+            first_name=data['first_name'],
+            last_name=data['last_name'],
+            email=data['email'],
+            phone=data['phone'],
+            role='sponsor',
+            position_title=data['position_title'],
+            org_name=data['org_name'],
+            org_category=data['org_category'],
+            org_industry=data['org_industry'],
+            org_website=data['org_website'],
+            org_address=data['org_address']
+        )
+        session.add(new_sponsor)
+        session.commit()
+        return jsonify({"message": "Sponsor registered successfully!"}), 201
+    except Exception as e:
+        session.rollback()
+        return jsonify({"error": str(e)}), 400
+    finally:
+        session.close()
+
+if __name__ == '__main__':
     app.run(debug=True)
