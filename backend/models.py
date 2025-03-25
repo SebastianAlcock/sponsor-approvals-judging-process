@@ -25,6 +25,7 @@ class User(Base):
     approved_projects = Column(String(255), nullable=True)
     committed_project = Column(String(255), nullable=True)
     project_manager = Column(String(15), nullable=True)
+    password = Column(String(255), nullable=False)
 
 class Project(Base):
     __tablename__ = 'projects'

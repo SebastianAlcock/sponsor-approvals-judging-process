@@ -21,6 +21,7 @@ def register_student():
             last_name=data['last_name'],
             email=data['email'],
             phone=data['phone'],
+            password=data['password'],
             role='student',
             major=data['major'],
             minor=data['minor'],
@@ -46,6 +47,7 @@ def register_sponsor():
             last_name=data['last_name'],
             email=data['email'],
             phone=data['phone'],
+            password=data['password'],
             role='sponsor',
             position_title=data['position_title'],
             org_name=data['org_name'],
@@ -60,6 +62,38 @@ def register_sponsor():
     except Exception as e:
         session.rollback()
         return jsonify({"error": str(e)}), 400
+    finally:
+        session.close()
+        
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    session = Session()
+
+    try:
+        user = session.query(User).filter_by(email=data['email']).first()
+
+        if user and user.password == data['password']:
+            user_data = {
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "email": user.email,
+                "role": user.role,
+                "track": user.track,
+                "applied_projects": user.applied_projects,
+                "approved_projects": user.approved_projects,
+                "committed_project": user.committed_project,
+                "project_manager": user.project_manager
+            }
+            return jsonify({
+                "message": "Login successful!",
+                "user": user_data
+            }), 200
+        else:
+            return jsonify({"error": "Invalid email or password"}), 401
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
     finally:
         session.close()
 
