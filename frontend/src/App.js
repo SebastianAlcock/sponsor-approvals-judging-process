@@ -1,22 +1,22 @@
-import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import SignupPage from "./pages/SignupPage";
+import LoginPage from "./pages/LoginPage"
 
 function App() {
-  const [message, setMessage] = useState("Loading...");
-
-  useEffect(() => {
-    fetch("http://127.0.0.1:5000/") // Connect to Flask backend
-      .then(response => response.json())
-      .then(data => setMessage(data.message))
-      .catch(error => setMessage("Error connecting to backend"));
-  }, []);
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>React Frontend</h1>
-        <p>Backend says: {message}</p>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <h1>Capstone Portal</h1>
+        <nav>
+          <Link to="/signup">Signup</Link> | <Link to="/login">Login</Link>
+        </nav>
+        <Routes>
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/dashboard" element={<h1>Dashboard Page (Coming Soon)</h1>} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
