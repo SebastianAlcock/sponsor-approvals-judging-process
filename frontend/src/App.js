@@ -1,19 +1,24 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import SignupPage from "./pages/SignupPage";
-import LoginPage from "./pages/LoginPage"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
+import Home from "./pages/Home";
+import Directory from "./pages/Directory";
+import User from "./pages/User";
+import Project from "./pages/Project";
+
+import './styles/App.css';
 
 function App() {
   return (
     <Router>
       <div className="App">
-        <h1>Capstone Portal</h1>
-        <nav>
-          <Link to="/signup">Signup</Link> | <Link to="/login">Login</Link>
-        </nav>
         <Routes>
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/dashboard" element={<h1>Dashboard Page (Coming Soon)</h1>} />
+          <Route path="/" element={<Home />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/directory" element={<Directory />} />
+          <Route path="/user" element={<User />} />
+          <Route path="/project" element={<Project />} />
         </Routes>
       </div>
     </Router>
