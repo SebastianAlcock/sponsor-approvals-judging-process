@@ -29,30 +29,41 @@ class User(Base):
 
 class Project(Base):
     __tablename__ = 'projects'
-    id = Column(Integer, primary_key=True, autoincrement=True)  #just so there's a primary key
-
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    
     year = Column(Integer)
     semester = Column(String(63))
-    position_title = Column(String(63))
     org_name = Column(String(63))
     org_category = Column(String(63))
     org_industry = Column(String(63))
     org_website = Column(String(63))
-    org_address = Column(String(63))
+    org_address = Column(String(255))
+    
+    contact_first_name = Column(String(63))
+    contact_last_name = Column(String(63))
+    contact_position_title = Column(String(63))
     contact_phone = Column(String(63))
     contact_email = Column(String(63))
-    document = Column(BLOB, nullable=True)
-    project_name = Column(String(63))
+    
+    document = Column(BLOB, nullable=True) 
+    
+    project_name = Column(String(255))
     project_description = Column(Text)
     project_criteria = Column(Text)
     project_skillset = Column(Text)
     project_instructions = Column(Text)
-    open_house = Column(String(15))
+    open_house = Column(Integer)  
+    
     employment_history = Column(String(255))
     employment_opportunities = Column(String(255))
     employment_benefits = Column(String(255))
-    committed = Column(String(15))
-    other_projects = Column(String(15))
+    
+    committed = Column(Integer)  
+    other_projects = Column(String(255))  
+    applied_students = Column(String(255)) 
+    approved_students = Column(String(255)) 
+    confirmed_students = Column(String(255))  
 
 
 class TrackRequest(Base):

@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from db import Session
-from models import User
+from models import User, Project, TrackRequest
 
 app = Flask(__name__)
 CORS(app)
@@ -94,6 +94,105 @@ def login():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        session.close()
+
+@app.route('/users', methods=['GET'])
+def get_all_users():
+    session = Session()
+
+    try:
+        users = session.query(User).all()
+
+        user_data = [{
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
+            "phone": user.phone,
+            "role": user.role
+        } for user in users]
+
+        return jsonify(user_data), 200  
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500  
+    finally:
+        session.close()
+
+@app.route('/projects', methods=['GET'])
+def get_all_projects():
+    session = Session()
+
+    try:
+        projects = session.query(Project).all()
+
+        project_data = [{
+            "project_name": project.project_name,
+            "org_name": project.org_name,
+            "project_description": project.project_description,
+            "year": project.year,
+            "semester": project.semester
+        } for project in projects]
+
+        return jsonify(project_data), 200  
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500  
+    finally:
+        session.close()
+
+@app.route('/user/<string:email>', methods=['GET'])
+def get_one_user(email):
+    session = Session()
+
+    try:
+        user = session.query(User).filter_by(email=email).first()
+
+        if user:
+            user_data = {
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "email": user.email,
+                "phone": user.phone,
+                "role": user.role,
+                "major": user.major,
+                "minor": user.minor,
+                "specialization": user.specialization,
+                "resume": user.resume
+            }
+            return jsonify(user_data), 200  
+        else:
+            return jsonify({"error": "User not found"}), 404  
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500  
+    finally:
+        session.close()
+
+@app.route('/project/<int:id>', methods=['GET'])
+def get_one_project(id):
+    session = Session()
+
+    try:
+        project = session.query(Project).filter_by(id=id).first()
+
+        if project:
+            project_data = {
+                "project_name": project.project_name,
+                "org_name": project.org_name,
+                "project_description": project.project_description,
+                "year": project.year,
+                "semester": project.semester,
+                "contact_first_name": project.contact_first_name,
+                "contact_last_name": project.contact_last_name,
+                "contact_email": project.contact_email
+            }
+            return jsonify(project_data), 200  
+        else:
+            return jsonify({"error": "Project not found"}), 404  
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500 
     finally:
         session.close()
 
