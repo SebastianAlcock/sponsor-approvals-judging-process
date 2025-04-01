@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from db import Session
 from models import User, Project, TrackRequest
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -248,6 +249,51 @@ def create_project():
     finally:
         # Close the session
         session.close()
+
+@app.route('/apply/<int:user_id>', methods=['PATCH'])
+def apply_to_project(user_id):
+    data = request.get_json()
+    session = Session()
+
+    try:
+        # Fetch the user by user_id
+        user = session.query(User).filter_by(id=user_id).first()
+        
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+        
+        # Fetch the project by project name (or ID) from the request data
+        project_name = data.get("project_name")
+        project = session.query(Project).filter_by(project_name=project_name).first()
+
+        if not project:
+            return jsonify({"error": "Project not found"}), 404
+
+        # Update the user's applied_projects field with the project name
+        user.applied_projects = project_name
+
+        # Update the project's applied_students field (store as a comma-separated string or JSON list)
+        applied_students = project.applied_students
+        if applied_students:
+            applied_students = json.loads(applied_students)
+        else:
+            applied_students = []
+
+        applied_students.append(user.email)  # Add the user's email to the applied_students list
+        project.applied_students = json.dumps(applied_students)  # Store as JSON string
+
+        # Commit the changes to both user and project tables
+        session.commit()
+
+        return jsonify({"message": "User successfully applied to the project!"}), 200
+
+    except Exception as e:
+        session.rollback()
+        return jsonify({"error": str(e)}), 400
+
+    finally:
+        session.close()
+
 
 if __name__ == '__main__':
     app.run(debug=True)

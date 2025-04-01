@@ -5,6 +5,9 @@ Base = declarative_base()
 
 class User(Base):
     __tablename__ = 'users'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
     first_name = Column(String(63))
     last_name = Column(String(63))
     email = Column(String(63), primary_key=True)
