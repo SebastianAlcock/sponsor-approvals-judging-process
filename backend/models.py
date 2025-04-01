@@ -10,6 +10,7 @@ class User(Base):
 
     first_name = Column(String(63))
     last_name = Column(String(63))
+    ucid = Column(String(63), nullable=True)
     email = Column(String(63), primary_key=True)
     phone = Column(String(63))
     role = Column(String(63))

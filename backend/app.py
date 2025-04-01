@@ -20,6 +20,7 @@ def register_student():
         new_student = User(
             first_name=data['first_name'],
             last_name=data['last_name'],
+            ucid=data['ucid'],
             email=data['email'],
             phone=data['phone'],
             password=data['password'],
