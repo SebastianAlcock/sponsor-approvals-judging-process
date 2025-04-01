@@ -17,7 +17,7 @@ export default function Project() {
     contact_first_name: 'Steven',
     contact_last_name: 'Samuel',
     contact_position_title: 'CTO',
-    contact_phone: '2016141249',
+    contact_phone: '(439) 245-8631',
     contact_email: 'steven@tapyoca.com',
     document: null,
     project_name: 'tapyoca FanCard Dashboard',
@@ -40,19 +40,17 @@ export default function Project() {
   var approved_students = project.approved_students.split(',').map(id => get_student(id))
   var confirmed_students = project.confirmed_students.split(',').map(id => get_student(id))
 
-  console.log(applied_students)
-
   // Takes a user id and returns a user object
   function get_student(id) {
     // TODO: GET student from id
     if (id === '124') {
-      return {first_name: 'John', last_name: 'Deer'}
+      return {id: 124, first_name: 'John', last_name: 'Deer'}
     }
     else if (id === '243') {
-      return {first_name: 'Jane', last_name: 'Doe'}
+      return {id: 243, first_name: 'Jane', last_name: 'Doe'}
     }
     else if (id === '324') {
-      return {first_name: 'Dale', last_name: 'Johnson'}
+      return {id: 324, first_name: 'Dale', last_name: 'Johnson'}
     }
   }
 
@@ -64,7 +62,7 @@ export default function Project() {
         <h1>
           {project.project_name}
         </h1>
-        <table>
+        <table><tbody>
           
           <tr>
             <th>
@@ -72,7 +70,7 @@ export default function Project() {
             </th>
             <td>
               <span className='long'>
-                {project.project_description.split(/\r\n|\r|\n/).map(p => {return <div>{p}</div>})}
+                {project.project_description.split(/\r\n|\r|\n/).map(p => {return <div key={p}>{p}</div>})}
               </span>
             </td>
           </tr>
@@ -83,7 +81,7 @@ export default function Project() {
             </th>
             <td>
               <span className='long'>
-                {project.project_criteria.split(/\r\n|\r|\n/).map(p => {return <div>{p}</div>})}
+                {project.project_criteria.split(/\r\n|\r|\n/).map(p => {return <div key={p}>{p}</div>})}
               </span>
             </td>
           </tr>
@@ -94,7 +92,7 @@ export default function Project() {
             </th>
             <td>
               <span className='long'>
-                {project.project_skillset.split(/\r\n|\r|\n/).map(p => {return <div>{p}</div>})}
+                {project.project_skillset.split(/\r\n|\r|\n/).map(p => {return <div key={p}>{p}</div>})}
               </span>
             </td>
           </tr>
@@ -105,18 +103,18 @@ export default function Project() {
             </th>
             <td>
               <span className='long'>
-                {project.project_instructions.split(/\r\n|\r|\n/).map(p => {return <div>{p}</div>})}
+                {project.project_instructions.split(/\r\n|\r|\n/).map(p => {return <div key={p}>{p}</div>})}
               </span>
             </td>
           </tr>
         
-        </table>
+        </tbody></table>
 
         <h2>
           Company Information:
         </h2>
 
-        <table>
+        <table><tbody>
 
           <tr>
             <th>
@@ -154,13 +152,13 @@ export default function Project() {
             </td>
           </tr>
         
-        </table>
+        </tbody></table>
 
         <h2>
           Contact Information:
         </h2>
         
-        <table>
+        <table><tbody>
 
           <tr>
             <th>
@@ -198,13 +196,13 @@ export default function Project() {
             </td>
           </tr>
         
-        </table>
+        </tbody></table>
 
         <h2>
           Student Application Information:
         </h2>
         
-        <table>
+        <table><tbody>
           
           <tr>
             <th>
@@ -214,7 +212,7 @@ export default function Project() {
               <ul>
                 {
                   applied_students.map(student => {
-                    return <li>{student.first_name} {student.last_name}</li>
+                    return <li key={student.id}>{student.first_name} {student.last_name}</li>
                   })
                 }
               </ul>
@@ -229,7 +227,7 @@ export default function Project() {
               <ul>
                 {
                   approved_students.map(student => {
-                    return <li>{student.first_name} {student.last_name}</li>
+                    return <li key={student.id}>{student.first_name} {student.last_name}</li>
                   })
                 }
               </ul>
@@ -244,14 +242,14 @@ export default function Project() {
               <ul>
                 {
                   confirmed_students.map(student => {
-                    return <li>{student.first_name} {student.last_name}</li>
+                    return <li key={student.id}>{student.first_name} {student.last_name}</li>
                   })
                 }
               </ul>
             </td>
           </tr>
 
-        </table>
+        </tbody></table>
       </div>
     </>
   );

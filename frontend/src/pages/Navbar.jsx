@@ -5,7 +5,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import '../styles/Navbar.css';
 
 const Navbar = ({currentPage}) => {
-	console.log(currentPage)
   if (currentPage === 'home') var homeClass = 'active'; else homeClass = '';
   if (currentPage === 'login') var loginClass = 'active'; else if (currentPage === 'signup') loginClass = 'active'; else loginClass = '';
   if (currentPage === 'directory') var directoryClass = 'active'; else directoryClass = '';
