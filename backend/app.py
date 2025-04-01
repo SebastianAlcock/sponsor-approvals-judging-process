@@ -196,5 +196,58 @@ def get_one_project(id):
     finally:
         session.close()
 
+#TEST ENDPOINT
+@app.route('/createproject', methods=['POST'])
+def create_project():
+    data = request.get_json()
+    session = Session()
+
+    try:
+        # Creating a new project using the data from the request
+        new_project = Project(
+            year=data['year'],
+            semester=data['semester'],
+            org_name=data['org_name'],
+            org_category=data['org_category'],
+            org_industry=data['org_industry'],
+            org_website=data['org_website'],
+            org_address=data['org_address'],
+            contact_first_name=data['contact_first_name'],
+            contact_last_name=data['contact_last_name'],
+            contact_position_title=data['contact_position_title'],
+            contact_phone=data['contact_phone'],
+            contact_email=data['contact_email'],
+            document=data.get('document', None),  # Default to None if no document is provided
+            project_name=data['project_name'],
+            project_description=data['project_description'],
+            project_criteria=data['project_criteria'],
+            project_skillset=data['project_skillset'],
+            project_instructions=data['project_instructions'],
+            open_house=data['open_house'],
+            employment_history=data['employment_history'],
+            employment_opportunities=data['employment_opportunities'],
+            employment_benefits=data['employment_benefits'],
+            committed=data['committed'],
+            other_projects=data['other_projects'],
+            applied_students=data.get('applied_students', []),  # Default to empty list if no students applied
+            approved_students=data.get('approved_students', []),  # Default to empty list if no students approved
+            confirmed_students=data.get('confirmed_students', [])  # Default to empty list if no students confirmed
+        )
+
+        # Add and commit the new project to the session
+        session.add(new_project)
+        session.commit()
+
+        return jsonify({"message": "Project created successfully!"}), 201
+
+    except Exception as e:
+        # Rollback the session if there's an error
+        session.rollback()
+        return jsonify({"error": str(e)}), 400
+
+    finally:
+        # Close the session
+        session.close()
+
 if __name__ == '__main__':
     app.run(debug=True)
