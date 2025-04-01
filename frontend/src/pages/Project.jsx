@@ -1,10 +1,14 @@
+import { useState } from "react";
 import Navbar from "./Navbar";
 
 import '../styles/Project.css';
 
 export default function Project() {
 
+  const [project, setProject] = useState(null);
+
   // TODO: GET project
+  /*
   var project = {
     id: 17045050,
     year: 2025,
@@ -34,11 +38,37 @@ export default function Project() {
     applied_students: '124,243,324',
     approved_students:  '124,243',
     confirmed_students: '124'
+  }{
+    id: 0,
+    year: 0,
+    semester: '',
+    org_name: '',
+    org_category: '',
+    org_industry: '',
+    org_website: '',
+    org_address: '',
+    contact_first_name: '',
+    contact_last_name: '',
+    contact_position_title: '',
+    contact_phone: '',
+    contact_email: '',
+    document: null,
+    project_name: '',
+    project_description: "",
+    project_criteria: "",
+    project_skillset: "",
+    project_instructions: "",
+    open_house: 0,
+    employment_history: '',
+    employment_opportunities: '',
+    employment_benefits: "",
+    committed: 0,
+    other_projects: 0,
+    applied_students: '',
+    approved_students:  '',
+    confirmed_students: ''
   }
-
-  var applied_students = project.applied_students.split(',').map(id => get_student(id))
-  var approved_students = project.approved_students.split(',').map(id => get_student(id))
-  var confirmed_students = project.confirmed_students.split(',').map(id => get_student(id))
+  */
 
   // Takes a user id and returns a user object
   function get_student(id) {
@@ -59,197 +89,205 @@ export default function Project() {
       <Navbar />
 
       <div className='project page'>
-        <h1>
-          {project.project_name}
-        </h1>
-        <table><tbody>
-          
-          <tr>
-            <th>
-              Description
-            </th>
-            <td>
-              <span className='long'>
-                {project.project_description.split(/\r\n|\r|\n/).map(p => {return <div key={p}>{p}</div>})}
-              </span>
-            </td>
-          </tr>
-          
-          <tr>
-            <th>
-              Project Completion Criteria
-            </th>
-            <td>
-              <span className='long'>
-                {project.project_criteria.split(/\r\n|\r|\n/).map(p => {return <div key={p}>{p}</div>})}
-              </span>
-            </td>
-          </tr>
-          
-          <tr>
-            <th>
-              Expected Skillset / Background
-            </th>
-            <td>
-              <span className='long'>
-                {project.project_skillset.split(/\r\n|\r|\n/).map(p => {return <div key={p}>{p}</div>})}
-              </span>
-            </td>
-          </tr>
-          
-          <tr>
-            <th>
-              Special Instructions or Concerns
-            </th>
-            <td>
-              <span className='long'>
-                {project.project_instructions.split(/\r\n|\r|\n/).map(p => {return <div key={p}>{p}</div>})}
-              </span>
-            </td>
-          </tr>
-        
-        </tbody></table>
+        {!project ?
+        <>
+          <div className="loadingSpinner"></div>
+        </>
+        :
+        <>
+          <h1>
+            {project.project_name}
+          </h1>
 
-        <h2>
-          Company Information:
-        </h2>
+          <table><tbody>
+            
+            <tr>
+              <th>
+                Description
+              </th>
+              <td>
+                <span className='long'>
+                  {project.project_description.split(/\r\n|\r|\n/).map(p => {return <div key={p}>{p}</div>})}
+                </span>
+              </td>
+            </tr>
+            
+            <tr>
+              <th>
+                Project Completion Criteria
+              </th>
+              <td>
+                <span className='long'>
+                  {project.project_criteria.split(/\r\n|\r|\n/).map(p => {return <div key={p}>{p}</div>})}
+                </span>
+              </td>
+            </tr>
+            
+            <tr>
+              <th>
+                Expected Skillset / Background
+              </th>
+              <td>
+                <span className='long'>
+                  {project.project_skillset.split(/\r\n|\r|\n/).map(p => {return <div key={p}>{p}</div>})}
+                </span>
+              </td>
+            </tr>
+            
+            <tr>
+              <th>
+                Special Instructions or Concerns
+              </th>
+              <td>
+                <span className='long'>
+                  {project.project_instructions.split(/\r\n|\r|\n/).map(p => {return <div key={p}>{p}</div>})}
+                </span>
+              </td>
+            </tr>
+          
+          </tbody></table>
 
-        <table><tbody>
+          <h2>
+            Company Information:
+          </h2>
 
-          <tr>
-            <th>
-              Name
-            </th>
-            <td>
-              {project.org_name}
-            </td>
-          </tr>
+          <table><tbody>
 
-          <tr>
-            <th>
-              Scope and Industry
-            </th>
-            <td>
-              {project.org_category}, {project.org_industry}
-            </td>
-          </tr>
-          
-          <tr>
-            <th>
-              Website
-            </th>
-            <td>
-              <a href={project.org_website}>{project.org_website}</a>
-            </td>
-          </tr>
-          
-          <tr>
-            <th>
-              Address
-            </th>
-            <td>
-              {project.org_address}
-            </td>
-          </tr>
-        
-        </tbody></table>
+            <tr>
+              <th>
+                Name
+              </th>
+              <td>
+                {project.org_name}
+              </td>
+            </tr>
 
-        <h2>
-          Contact Information:
-        </h2>
-        
-        <table><tbody>
+            <tr>
+              <th>
+                Scope and Industry
+              </th>
+              <td>
+                {project.org_category}, {project.org_industry}
+              </td>
+            </tr>
+            
+            <tr>
+              <th>
+                Website
+              </th>
+              <td>
+                <a href={project.org_website}>{project.org_website}</a>
+              </td>
+            </tr>
+            
+            <tr>
+              <th>
+                Address
+              </th>
+              <td>
+                {project.org_address}
+              </td>
+            </tr>
+          
+          </tbody></table>
 
-          <tr>
-            <th>
-              Name
-            </th>
-            <td>
-              {project.contact_first_name} {project.contact_last_name}
-            </td>
-          </tr>
+          <h2>
+            Contact Information:
+          </h2>
           
-          <tr>
-            <th>
-              Position
-            </th>
-            <td>
-              {project.contact_position_title}
-            </td>
-          </tr>
-          
-          <tr>
-            <th>
-              Email
-            </th>
-            <td>
-              {project.contact_email}
-            </td>
-          </tr>
-          
-          <tr>
-            <th>
-              Phone
-            </th>
-            <td>
-              {project.contact_phone}
-            </td>
-          </tr>
-        
-        </tbody></table>
+          <table><tbody>
 
-        <h2>
-          Student Application Information:
-        </h2>
-        
-        <table><tbody>
+            <tr>
+              <th>
+                Name
+              </th>
+              <td>
+                {project.contact_first_name} {project.contact_last_name}
+              </td>
+            </tr>
+            
+            <tr>
+              <th>
+                Position
+              </th>
+              <td>
+                {project.contact_position_title}
+              </td>
+            </tr>
+            
+            <tr>
+              <th>
+                Email
+              </th>
+              <td>
+                {project.contact_email}
+              </td>
+            </tr>
+            
+            <tr>
+              <th>
+                Phone
+              </th>
+              <td>
+                {project.contact_phone}
+              </td>
+            </tr>
           
-          <tr>
-            <th>
-              Applied Students:
-            </th>
-            <td>
-              <ul>
-                {
-                  applied_students.map(student => {
-                    return <li key={student.id}>{student.first_name} {student.last_name}</li>
-                  })
-                }
-              </ul>
-            </td>
-          </tr>
-          
-          <tr>
-            <th>
-              Approved Students:
-            </th>
-            <td>
-              <ul>
-                {
-                  approved_students.map(student => {
-                    return <li key={student.id}>{student.first_name} {student.last_name}</li>
-                  })
-                }
-              </ul>
-            </td>
-          </tr>
-          
-          <tr>
-            <th>
-              Confirmed Students:
-            </th>
-            <td>
-              <ul>
-                {
-                  confirmed_students.map(student => {
-                    return <li key={student.id}>{student.first_name} {student.last_name}</li>
-                  })
-                }
-              </ul>
-            </td>
-          </tr>
+          </tbody></table>
 
-        </tbody></table>
+          <h2>
+            Student Application Information:
+          </h2>
+          
+          <table><tbody>
+            
+            <tr>
+              <th>
+                Applied Students:
+              </th>
+              <td>
+                <ul>
+                  {
+                    project.applied_students.split(',').map(id => get_student(id)).map(student => {
+                      return <li key={student.id}>{student.first_name} {student.last_name}</li>
+                    })
+                  }
+                </ul>
+              </td>
+            </tr>
+            
+            <tr>
+              <th>
+                Approved Students:
+              </th>
+              <td>
+                <ul>
+                  {
+                    project.approved_students.split(',').map(id => get_student(id)).map(student => {
+                      return <li key={student.id}>{student.first_name} {student.last_name}</li>
+                    })
+                  }
+                </ul>
+              </td>
+            </tr>
+            
+            <tr>
+              <th>
+                Confirmed Students:
+              </th>
+              <td>
+                <ul>
+                  {
+                    project.confirmed_students.split(',').map(id => get_student(id)).map(student => {
+                      return <li key={student.id}>{student.first_name} {student.last_name}</li>
+                    })
+                  }
+                </ul>
+              </td>
+            </tr>
+
+          </tbody></table>
+        </>}
       </div>
     </>
   );
