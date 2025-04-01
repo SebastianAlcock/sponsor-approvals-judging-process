@@ -13,7 +13,7 @@ class User(Base):
     ucid = Column(String(63), nullable=True)
     email = Column(String(63), primary_key=True)
     phone = Column(String(63))
-    role = Column(String(63))
+    roles = Column(String(63))
     major = Column(String(63), nullable=True)
     minor = Column(String(63), nullable=True)
     specialization = Column(String(63), nullable=True)
