@@ -29,7 +29,7 @@ const Navbar = ({currentPage}) => {
         <Link to='/project'>Project</Link>
         <Link to='/user'>User</Link>
         
-				{localStorage.getItem('token') ?
+				{! localStorage.getItem('user') ?
 					<Link to='/login' className={loginClass}>Login</Link>
 					:
 					<Link onClick={handleLogout}>Logout</Link>
