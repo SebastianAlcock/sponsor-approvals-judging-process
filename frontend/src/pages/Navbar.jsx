@@ -8,6 +8,7 @@ const Navbar = ({currentPage}) => {
   if (currentPage === 'home') var homeClass = 'active'; else homeClass = '';
   if (currentPage === 'login') var loginClass = 'active'; else if (currentPage === 'signup') loginClass = 'active'; else loginClass = '';
   if (currentPage === 'directory') var directoryClass = 'active'; else directoryClass = '';
+  if (currentPage === 'applications') var applicationsClass = 'active'; else applicationsClass = '';
 
 	const navigate = useNavigate();
   const handleLogout = () => {
@@ -24,6 +25,7 @@ const Navbar = ({currentPage}) => {
       <span className='navlinks'>
 				<Link to='/' className={homeClass}>Home</Link>
         <Link to='/directory' className={directoryClass}>Directory</Link>
+        <Link to='/applications' className={applicationsClass}>Applications</Link>
         <Link to='/project'>Project</Link>
         <Link to='/user'>User</Link>
         

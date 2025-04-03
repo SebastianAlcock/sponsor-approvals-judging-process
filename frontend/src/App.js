@@ -3,6 +3,8 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Directory from "./pages/Directory";
+import Applications from "./pages/Applications";
+import Proposal from "./pages/Applications/Proposal";
 import User from "./pages/User";
 import Project from "./pages/Project";
 
@@ -17,6 +19,8 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/directory" element={<Directory />} />
+          <Route path="/applications" element={<Applications />} />
+          <Route path="/applications/proposal" element={<Proposal />} />
           <Route path="/user" element={<User />} />
           <Route path="/project" element={<Project />} />
         </Routes>
