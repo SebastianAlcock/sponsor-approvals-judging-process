@@ -26,10 +26,8 @@ const Navbar = ({currentPage}) => {
 				<Link to='/' className={homeClass}>Home</Link>
         <Link to='/directory' className={directoryClass}>Directory</Link>
         <Link to='/applications' className={applicationsClass}>Applications</Link>
-        <Link to='/project'>Project</Link>
-        <Link to='/user'>User</Link>
         
-				{! localStorage.getItem('user') ?
+				{! localStorage.getItem('token') ?
 					<Link to='/login' className={loginClass}>Login</Link>
 					:
 					<Link onClick={handleLogout}>Logout</Link>

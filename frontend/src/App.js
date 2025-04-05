@@ -7,6 +7,7 @@ import Applications from "./pages/Applications";
 import Proposal from "./pages/Applications/Proposal";
 import User from "./pages/User";
 import Project from "./pages/Project";
+import TestGrid from './TestGrid';
 
 import './styles/App.css';
 
@@ -21,8 +22,9 @@ function App() {
           <Route path="/directory" element={<Directory />} />
           <Route path="/applications" element={<Applications />} />
           <Route path="/applications/proposal" element={<Proposal />} />
-          <Route path="/user" element={<User />} />
-          <Route path="/project" element={<Project />} />
+          <Route path="/user/:id" element={<User />} />
+          <Route path="/project/:id" element={<Project />} />
+          <Route path="/test" element={<TestGrid />} />
         </Routes>
       </div>
     </Router>

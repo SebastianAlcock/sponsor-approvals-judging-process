@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../services/api"; // <== use your axios instance here
+import api from "../services/api"; 
 
 import Navbar from "./Navbar";
 
@@ -8,6 +8,7 @@ export default function Signup() {
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
+    ucid: "",
     email: "",
     phone: "",
     password: "",
@@ -27,7 +28,7 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await api.post("/register-student", formData);  // <== call backend using api instance
+      await api.post("/register-student", formData);  
       setSuccess("Registration successful! Redirecting to login...");
       setError("");
       setTimeout(() => navigate("/login"), 2000);
@@ -46,6 +47,7 @@ export default function Signup() {
         <form onSubmit={handleSubmit}>
           <input name="first_name" placeholder="First Name" value={formData.first_name} onChange={handleChange} required /><br />
           <input name="last_name" placeholder="Last Name" value={formData.last_name} onChange={handleChange} required /><br />
+          <input name="ucid" placeholder="UCID" value={formData.ucid} onChange={handleChange} required /><br />
           <input name="email" type="email" placeholder="Email" value={formData.email} onChange={handleChange} required /><br />
           <input name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} required /><br />
           <input name="password" type="password" placeholder="Password" value={formData.password} onChange={handleChange} required /><br />

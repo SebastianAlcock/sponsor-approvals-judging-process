@@ -129,6 +129,7 @@ def get_all_projects():
         projects = session.query(Project).all()
 
         project_data = [{
+            "id": project.id,
             "project_name": project.project_name,
             "org_name": project.org_name,
             "project_description": project.project_description,

@@ -1,0 +1,53 @@
+.directory.page {
+    padding: 2rem;
+    font-family: sans-serif;
+  }
+  
+  .tabs {
+    margin-bottom: 1rem;
+  }
+  
+  .tabs button {
+    margin-right: 1rem;
+    padding: 0.5rem 1.2rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #eee;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .tabs button.active {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  /* Mimic your table style */
+  .rdg {
+    border: none;
+    font-family: inherit;
+    font-size: 1rem;
+    background-color: white;
+  }
+  
+  .rdg-header-row {
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+    font-weight: bold;
+  }
+  
+  .rdg-cell {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .rdg-row {
+    cursor: pointer;
+  }
+  
+  .rdg-row:hover {
+    background-color: #f2f2f2;
+  }
+
+  
+  
