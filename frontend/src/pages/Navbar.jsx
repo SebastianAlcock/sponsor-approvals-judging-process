@@ -13,7 +13,8 @@ const Navbar = ({currentPage}) => {
 	const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem('user'); // Clear token
-    navigate('/'); // Redirect to login
+    window.dispatchEvent(new Event("storage")); 
+    navigate("/login");
   }
 
 	// NOTE: Project and User pages will not exist in final nav
@@ -27,7 +28,7 @@ const Navbar = ({currentPage}) => {
         <Link to='/directory' className={directoryClass}>Directory</Link>
         <Link to='/applications' className={applicationsClass}>Applications</Link>
         
-				{! localStorage.getItem('token') ?
+				{! localStorage.getItem('user') ?
 					<Link to='/login' className={loginClass}>Login</Link>
 					:
 					<Link onClick={handleLogout}>Logout</Link>
