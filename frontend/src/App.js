@@ -8,6 +8,7 @@ import Proposal from "./pages/Applications/Proposal";
 import User from "./pages/User";
 import Project from "./pages/Project";
 import TestGrid from './TestGrid';
+import Approval from "./pages/Applications/Approval";
 
 import './styles/App.css';
 
@@ -25,6 +26,7 @@ function App() {
           <Route path="/user/:id" element={<User />} />
           <Route path="/project/:id" element={<Project />} />
           <Route path="/test" element={<TestGrid />} />
+          <Route path="/applications/approval" element={<Approval />} />
         </Routes>
       </div>
     </Router>
