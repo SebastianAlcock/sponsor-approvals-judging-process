@@ -111,7 +111,9 @@ def get_all_users():
             "last_name": user.last_name,
             "email": user.email,
             "phone": user.phone,
-            "roles": user.roles
+            "roles": user.roles,
+            "org_industry": user.org_industry, 
+            "org_category": user.org_category
         } for user in users]
 
         return jsonify(user_data), 200  
