@@ -187,12 +187,12 @@ def get_all_projects():
     finally:
         session.close()
 
-@app.route('/user/<string:email>', methods=['GET'])
-def get_one_user(email):
+@app.route('/user/<int:id>', methods=['GET'])
+def get_one_user(id):
     session = Session()
 
     try:
-        user = session.query(User).filter_by(email=email).first()
+        user = session.query(User).filter_by(id=id).first()
 
         if user:
             user_data = {
@@ -228,6 +228,7 @@ def get_one_user(email):
         return jsonify({"error": str(e)}), 500  
     finally:
         session.close()
+
 
 @app.route('/project/<int:id>', methods=['GET'])
 def get_one_project(id):
@@ -276,7 +277,6 @@ def get_one_project(id):
     finally:
         session.close()
 
-#TEST ENDPOINT
 @app.route('/createproject', methods=['POST'])
 def create_project():
     data = request.get_json()
