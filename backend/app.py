@@ -3,6 +3,7 @@ from flask_cors import CORS
 from db import Session
 from models import User, Project, TrackRequest
 import json
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 CORS(app)
@@ -17,13 +18,14 @@ def register_student():
     session = Session()
 
     try:
+        hashed_password = generate_password_hash(data['password'], method='pbkdf2:sha256')
         new_student = User(
             first_name=data['first_name'],
             last_name=data['last_name'],
             ucid=data['ucid'],
             email=data['email'],
             phone=data['phone'],
-            password=data['password'],
+            password=hashed_password,
             roles='student',
             major=data['major'],
             minor=data['minor'],
@@ -44,12 +46,13 @@ def register_sponsor():
     session = Session()
 
     try:
+        hashed_password = generate_password_hash(data['password'], method='pbkdf2:sha256')
         new_sponsor = User(
             first_name=data['first_name'],
             last_name=data['last_name'],
             email=data['email'],
             phone=data['phone'],
-            password=data['password'],
+            password=hashed_password,
             roles='sponsor',
             position_title=data['position_title'],
             org_name=data['org_name'],
@@ -75,7 +78,7 @@ def login():
     try:
         user = session.query(User).filter_by(email=data['email']).first()
 
-        if user and user.password == data['password']:
+        if user and check_password_hash(user.password, data['password']):
             user_data = {
                 "first_name": user.first_name,
                 "last_name": user.last_name,
@@ -107,13 +110,29 @@ def get_all_users():
         users = session.query(User).all()
 
         user_data = [{
+            "id": user.id,
             "first_name": user.first_name,
             "last_name": user.last_name,
+            "ucid": user.ucid,
             "email": user.email,
             "phone": user.phone,
             "roles": user.roles,
-            "org_industry": user.org_industry, 
-            "org_category": user.org_category
+            "major": user.major,
+            "minor": user.minor,
+            "specialization": user.specialization,
+            "resume": user.resume,
+            "position_title": user.position_title,
+            "org_name": user.org_name,
+            "org_category": user.org_category,
+            "org_industry": user.org_industry,
+            "org_website": user.org_website,
+            "org_address": user.org_address,
+            "track": user.track,
+            "applied_projects": user.applied_projects,
+            "approved_projects": user.approved_projects,
+            "committed_project": user.committed_project,
+            "project_manager": user.project_manager,
+            "password": user.password 
         } for user in users]
 
         return jsonify(user_data), 200  
@@ -131,11 +150,34 @@ def get_all_projects():
         projects = session.query(Project).all()
 
         project_data = [{
-            "project_name": project.project_name,
-            "org_name": project.org_name,
-            "project_description": project.project_description,
+            "id": project.id,
             "year": project.year,
-            "semester": project.semester
+            "semester": project.semester,
+            "org_name": project.org_name,
+            "org_category": project.org_category,
+            "org_industry": project.org_industry,
+            "org_website": project.org_website,
+            "org_address": project.org_address,
+            "contact_first_name": project.contact_first_name,
+            "contact_last_name": project.contact_last_name,
+            "contact_position_title": project.contact_position_title,
+            "contact_phone": project.contact_phone,
+            "contact_email": project.contact_email,
+            "document": project.document,
+            "project_name": project.project_name,
+            "project_description": project.project_description,
+            "project_criteria": project.project_criteria,
+            "project_skillset": project.project_skillset,
+            "project_instructions": project.project_instructions,
+            "open_house": project.open_house,
+            "employment_history": project.employment_history,
+            "employment_opportunities": project.employment_opportunities,
+            "employment_benefits": project.employment_benefits,
+            "committed": project.committed,
+            "other_projects": project.other_projects,
+            "applied_students": project.applied_students,
+            "approved_students": project.approved_students,
+            "confirmed_students": project.confirmed_students
         } for project in projects]
 
         return jsonify(project_data), 200  
@@ -154,15 +196,29 @@ def get_one_user(email):
 
         if user:
             user_data = {
+                "id": user.id,
                 "first_name": user.first_name,
                 "last_name": user.last_name,
+                "ucid": user.ucid,
                 "email": user.email,
                 "phone": user.phone,
                 "roles": user.roles,
                 "major": user.major,
                 "minor": user.minor,
                 "specialization": user.specialization,
-                "resume": user.resume
+                "resume": user.resume,
+                "position_title": user.position_title,
+                "org_name": user.org_name,
+                "org_category": user.org_category,
+                "org_industry": user.org_industry,
+                "org_website": user.org_website,
+                "org_address": user.org_address,
+                "track": user.track,
+                "applied_projects": user.applied_projects,
+                "approved_projects": user.approved_projects,
+                "committed_project": user.committed_project,
+                "project_manager": user.project_manager,
+                "password": user.password 
             }
             return jsonify(user_data), 200  
         else:
@@ -182,14 +238,34 @@ def get_one_project(id):
 
         if project:
             project_data = {
-                "project_name": project.project_name,
-                "org_name": project.org_name,
-                "project_description": project.project_description,
+                "id": project.id,
                 "year": project.year,
                 "semester": project.semester,
+                "org_name": project.org_name,
+                "org_category": project.org_category,
+                "org_industry": project.org_industry,
+                "org_website": project.org_website,
+                "org_address": project.org_address,
                 "contact_first_name": project.contact_first_name,
                 "contact_last_name": project.contact_last_name,
-                "contact_email": project.contact_email
+                "contact_position_title": project.contact_position_title,
+                "contact_phone": project.contact_phone,
+                "contact_email": project.contact_email,
+                "document": project.document,
+                "project_name": project.project_name,
+                "project_description": project.project_description,
+                "project_criteria": project.project_criteria,
+                "project_skillset": project.project_skillset,
+                "project_instructions": project.project_instructions,
+                "open_house": project.open_house,
+                "employment_history": project.employment_history,
+                "employment_opportunities": project.employment_opportunities,
+                "employment_benefits": project.employment_benefits,
+                "committed": project.committed,
+                "other_projects": project.other_projects,
+                "applied_students": project.applied_students,
+                "approved_students": project.approved_students,
+                "confirmed_students": project.confirmed_students
             }
             return jsonify(project_data), 200  
         else:
@@ -403,7 +479,6 @@ def update_user(id):
         if not user:
             return jsonify({"error": "User not found"}), 404
 
-        # Update user fields based on incoming data
         user.first_name = data.get('first_name', user.first_name)
         user.last_name = data.get('last_name', user.last_name)
         user.ucid = data.get('ucid', user.ucid)
@@ -458,7 +533,6 @@ def update_project(id):
         if not project:
             return jsonify({"error": "Project not found"}), 404
 
-        # Update project fields based on incoming data
         project.year = data.get('year', project.year)
         project.semester = data.get('semester', project.semester)
         project.org_name = data.get('org_name', project.org_name)
