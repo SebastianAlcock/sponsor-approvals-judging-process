@@ -36,6 +36,7 @@ class Project(Base):
     
     id = Column(Integer, primary_key=True, autoincrement=True)
     
+    approved = Column(Integer)
     year = Column(Integer)
     semester = Column(String(63))
     org_name = Column(String(63))
