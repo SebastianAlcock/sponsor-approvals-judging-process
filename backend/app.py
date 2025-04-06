@@ -370,6 +370,135 @@ def commit_to_project(user_id):
     finally:
         session.close()
 
+@app.route('/user/<int:id>', methods=['DELETE'])
+def delete_user(id):
+    session = Session()
+
+    try:
+        user = session.query(User).filter_by(id=id).first()
+
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        session.delete(user)
+        session.commit()
+
+        return jsonify({"message": "User deleted successfully!"}), 200
+
+    except Exception as e:
+        session.rollback()
+        return jsonify({"error": str(e)}), 400
+
+    finally:
+        session.close()
+
+@app.route('/user/<int:id>', methods=['PATCH'])
+def update_user(id):
+    data = request.get_json()
+    session = Session()
+
+    try:
+        user = session.query(User).filter_by(id=id).first()
+
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        # Update user fields based on incoming data
+        user.first_name = data.get('first_name', user.first_name)
+        user.last_name = data.get('last_name', user.last_name)
+        user.ucid = data.get('ucid', user.ucid)
+        user.email = data.get('email', user.email)
+        user.phone = data.get('phone', user.phone)
+        user.roles = data.get('roles', user.roles)
+        user.major = data.get('major', user.major)
+        user.minor = data.get('minor', user.minor)
+        user.specialization = data.get('specialization', user.specialization)
+        
+        session.commit()
+
+        return jsonify({"message": "User updated successfully!"}), 200
+
+    except Exception as e:
+        session.rollback()
+        return jsonify({"error": str(e)}), 400
+
+    finally:
+        session.close()
+
+@app.route('/project/<int:id>', methods=['DELETE'])
+def delete_project(id):
+    session = Session()
+
+    try:
+        project = session.query(Project).filter_by(id=id).first()
+
+        if not project:
+            return jsonify({"error": "Project not found"}), 404
+
+        session.delete(project)
+        session.commit()
+
+        return jsonify({"message": "Project deleted successfully!"}), 200
+
+    except Exception as e:
+        session.rollback()
+        return jsonify({"error": str(e)}), 400
+
+    finally:
+        session.close()
+
+@app.route('/project/<int:id>', methods=['PATCH'])
+def update_project(id):
+    data = request.get_json()
+    session = Session()
+
+    try:
+        project = session.query(Project).filter_by(id=id).first()
+
+        if not project:
+            return jsonify({"error": "Project not found"}), 404
+
+        # Update project fields based on incoming data
+        project.year = data.get('year', project.year)
+        project.semester = data.get('semester', project.semester)
+        project.org_name = data.get('org_name', project.org_name)
+        project.org_category = data.get('org_category', project.org_category)
+        project.org_industry = data.get('org_industry', project.org_industry)
+        project.org_website = data.get('org_website', project.org_website)
+        project.org_address = data.get('org_address', project.org_address)
+        project.contact_first_name = data.get('contact_first_name', project.contact_first_name)
+        project.contact_last_name = data.get('contact_last_name', project.contact_last_name)
+        project.contact_position_title = data.get('contact_position_title', project.contact_position_title)
+        project.contact_phone = data.get('contact_phone', project.contact_phone)
+        project.contact_email = data.get('contact_email', project.contact_email)
+        project.document = data.get('document', project.document)
+        project.project_name = data.get('project_name', project.project_name)
+        project.project_description = data.get('project_description', project.project_description)
+        project.project_criteria = data.get('project_criteria', project.project_criteria)
+        project.project_skillset = data.get('project_skillset', project.project_skillset)
+        project.project_instructions = data.get('project_instructions', project.project_instructions)
+        project.open_house = data.get('open_house', project.open_house)
+        project.employment_history = data.get('employment_history', project.employment_history)
+        project.employment_opportunities = data.get('employment_opportunities', project.employment_opportunities)
+        project.employment_benefits = data.get('employment_benefits', project.employment_benefits)
+        project.committed = data.get('committed', project.committed)
+        project.other_projects = data.get('other_projects', project.other_projects)
+        project.applied_students = data.get('applied_students', project.applied_students)
+        project.approved_students = data.get('approved_students', project.approved_students)
+        project.confirmed_students = data.get('confirmed_students', project.confirmed_students)
+
+        session.commit()
+
+        return jsonify({"message": "Project updated successfully!"}), 200
+
+    except Exception as e:
+        session.rollback()
+        return jsonify({"error": str(e)}), 400
+
+    finally:
+        session.close()
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
