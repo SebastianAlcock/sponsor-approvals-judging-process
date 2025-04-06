@@ -163,7 +163,9 @@ def get_all_projects():
             "contact_position_title": project.contact_position_title,
             "contact_phone": project.contact_phone,
             "contact_email": project.contact_email,
-            "document": project.document,
+            "org_document": project.org_document,
+            "project_document": project.project_document,
+            "agreement_document": project.agreement_document,
             "project_name": project.project_name,
             "project_description": project.project_description,
             "project_criteria": project.project_criteria,
@@ -252,7 +254,9 @@ def get_one_project(id):
                 "contact_position_title": project.contact_position_title,
                 "contact_phone": project.contact_phone,
                 "contact_email": project.contact_email,
-                "document": project.document,
+                "org_document": project.org_document,
+                "project_document": project.project_document,
+                "agreement_document": project.agreement_document,
                 "project_name": project.project_name,
                 "project_description": project.project_description,
                 "project_criteria": project.project_criteria,
@@ -296,7 +300,9 @@ def create_project():
             contact_position_title=data['contact_position_title'],
             contact_phone=data['contact_phone'],
             contact_email=data['contact_email'],
-            document=data.get('document', None),  
+            org_document=data['org_document'],
+            project_document=data['project_document'],
+            agreement_document=data['agreement_document'],
             project_name=data['project_name'],
             project_description=data['project_description'],
             project_criteria=data['project_criteria'],
@@ -545,7 +551,9 @@ def update_project(id):
         project.contact_position_title = data.get('contact_position_title', project.contact_position_title)
         project.contact_phone = data.get('contact_phone', project.contact_phone)
         project.contact_email = data.get('contact_email', project.contact_email)
-        project.document = data.get('document', project.document)
+        project.org_document = data.get('org_document', project.org_document)
+        project.project_document = data.get('project_document', project.project_document)
+        project.agreement_document = data.get('agreement_document', project.agreement_document)
         project.project_name = data.get('project_name', project.project_name)
         project.project_description = data.get('project_description', project.project_description)
         project.project_criteria = data.get('project_criteria', project.project_criteria)
