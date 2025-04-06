@@ -23,23 +23,20 @@ export default function Login() {
     try {
       const res = await api.post("/login", formData);
       const user = res.data.user;
-
+  
       localStorage.setItem("user", JSON.stringify(user));
-      setSuccess("Login successful! Redirecting...");
       setError("");
-
-      if (user.role.includes("sponsor")) {
-        navigate("/sponsor-dashboard");
-      } else if (user.role.includes("student")) {
-        navigate("/student-dashboard");
-      } else {
-        navigate("/");
-      }
+      setSuccess("Login successful!");
+  
+      // ✅ Redirect to homepage after successful login
+      navigate("/");
     } catch (err) {
+      console.error("Login failed:", err);
       setError(err.response?.data?.error || "Login failed");
       setSuccess("");
     }
   };
+  
 
   return (
     <>
