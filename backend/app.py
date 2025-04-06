@@ -151,6 +151,7 @@ def get_all_projects():
 
         project_data = [{
             "id": project.id,
+            "approved": project.approved,
             "year": project.year,
             "semester": project.semester,
             "org_name": project.org_name,
@@ -242,6 +243,7 @@ def get_one_project(id):
         if project:
             project_data = {
                 "id": project.id,
+                "approved": project.approved,
                 "year": project.year,
                 "semester": project.semester,
                 "org_name": project.org_name,
@@ -289,6 +291,7 @@ def create_project():
     try:
         new_project = Project(
             year=data['year'],
+            approved=data['approved'],
             semester=data['semester'],
             org_name=data['org_name'],
             org_category=data['org_category'],
@@ -401,6 +404,8 @@ def approve_student(project_id, student_id):
 
         approved_students.append(student.email)  
         project.approved_students = json.dumps(approved_students)  
+
+        project.approved = "1"
 
         session.commit()
 
@@ -539,6 +544,7 @@ def update_project(id):
         if not project:
             return jsonify({"error": "Project not found"}), 404
 
+        project.approved = data.get('approved', project.approved)
         project.year = data.get('year', project.year)
         project.semester = data.get('semester', project.semester)
         project.org_name = data.get('org_name', project.org_name)
