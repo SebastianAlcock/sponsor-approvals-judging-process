@@ -60,13 +60,13 @@ class Project(Base):
     project_criteria = Column(Text)
     project_skillset = Column(Text)
     project_instructions = Column(Text)
-    open_house = Column(Integer)  
+    open_house = Column(String(63))  
     
     employment_history = Column(String(255))
     employment_opportunities = Column(String(255))
     employment_benefits = Column(String(255))
     
-    committed = Column(Integer)  
+    committed = Column(String(63))  
     other_projects = Column(String(255))  
     applied_students = Column(String(255)) 
     approved_students = Column(String(255)) 
