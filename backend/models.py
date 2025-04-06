@@ -50,7 +50,9 @@ class Project(Base):
     contact_phone = Column(String(63))
     contact_email = Column(String(63))
     
-    document = Column(BLOB, nullable=True) 
+    org_document = Column(BLOB, nullable=True)
+    project_document = Column(BLOB, nullable=True)
+    agreement_document = Column(BLOB, nullable=True)
     
     project_name = Column(String(255))
     project_description = Column(Text)
