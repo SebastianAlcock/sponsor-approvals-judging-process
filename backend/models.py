@@ -36,6 +36,7 @@ class Project(Base):
     
     id = Column(Integer, primary_key=True, autoincrement=True)
     
+    approved = Column(String(1))
     year = Column(Integer)
     semester = Column(String(63))
     org_name = Column(String(63))
@@ -50,20 +51,22 @@ class Project(Base):
     contact_phone = Column(String(63))
     contact_email = Column(String(63))
     
-    document = Column(BLOB, nullable=True) 
+    org_document = Column(BLOB, nullable=True)
+    project_document = Column(BLOB, nullable=True)
+    agreement_document = Column(BLOB, nullable=True)
     
     project_name = Column(String(255))
     project_description = Column(Text)
     project_criteria = Column(Text)
     project_skillset = Column(Text)
     project_instructions = Column(Text)
-    open_house = Column(Integer)  
+    open_house = Column(String(63))  
     
     employment_history = Column(String(255))
     employment_opportunities = Column(String(255))
     employment_benefits = Column(String(255))
     
-    committed = Column(Integer)  
+    committed = Column(String(63))  
     other_projects = Column(String(255))  
     applied_students = Column(String(255)) 
     approved_students = Column(String(255)) 

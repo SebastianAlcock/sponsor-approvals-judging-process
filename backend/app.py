@@ -3,6 +3,7 @@ from flask_cors import CORS
 from db import Session
 from models import User, Project, TrackRequest
 import json
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 CORS(app)
@@ -17,13 +18,14 @@ def register_student():
     session = Session()
 
     try:
+        hashed_password = generate_password_hash(data['password'], method='pbkdf2:sha256')
         new_student = User(
             first_name=data['first_name'],
             last_name=data['last_name'],
             ucid=data['ucid'],
             email=data['email'],
             phone=data['phone'],
-            password=data['password'],
+            password=hashed_password,
             roles='student',
             major=data['major'],
             minor=data['minor'],
@@ -44,12 +46,13 @@ def register_sponsor():
     session = Session()
 
     try:
+        hashed_password = generate_password_hash(data['password'], method='pbkdf2:sha256')
         new_sponsor = User(
             first_name=data['first_name'],
             last_name=data['last_name'],
             email=data['email'],
             phone=data['phone'],
-            password=data['password'],
+            password=hashed_password,
             roles='sponsor',
             position_title=data['position_title'],
             org_name=data['org_name'],
@@ -75,7 +78,7 @@ def login():
     try:
         user = session.query(User).filter_by(email=data['email']).first()
 
-        if user and user.password == data['password']:
+        if user and check_password_hash(user.password, data['password']):
             user_data = {
                 "first_name": user.first_name,
                 "last_name": user.last_name,
@@ -107,11 +110,29 @@ def get_all_users():
         users = session.query(User).all()
 
         user_data = [{
+            "id": user.id,
             "first_name": user.first_name,
             "last_name": user.last_name,
+            "ucid": user.ucid,
             "email": user.email,
             "phone": user.phone,
-            "roles": user.roles
+            "roles": user.roles,
+            "major": user.major,
+            "minor": user.minor,
+            "specialization": user.specialization,
+            "resume": user.resume,
+            "position_title": user.position_title,
+            "org_name": user.org_name,
+            "org_category": user.org_category,
+            "org_industry": user.org_industry,
+            "org_website": user.org_website,
+            "org_address": user.org_address,
+            "track": user.track,
+            "applied_projects": user.applied_projects,
+            "approved_projects": user.approved_projects,
+            "committed_project": user.committed_project,
+            "project_manager": user.project_manager,
+            "password": user.password 
         } for user in users]
 
         return jsonify(user_data), 200  
@@ -130,11 +151,36 @@ def get_all_projects():
 
         project_data = [{
             "id": project.id,
-            "project_name": project.project_name,
-            "org_name": project.org_name,
-            "project_description": project.project_description,
+            "approved": project.approved,
             "year": project.year,
-            "semester": project.semester
+            "semester": project.semester,
+            "org_name": project.org_name,
+            "org_category": project.org_category,
+            "org_industry": project.org_industry,
+            "org_website": project.org_website,
+            "org_address": project.org_address,
+            "contact_first_name": project.contact_first_name,
+            "contact_last_name": project.contact_last_name,
+            "contact_position_title": project.contact_position_title,
+            "contact_phone": project.contact_phone,
+            "contact_email": project.contact_email,
+            "org_document": project.org_document,
+            "project_document": project.project_document,
+            "agreement_document": project.agreement_document,
+            "project_name": project.project_name,
+            "project_description": project.project_description,
+            "project_criteria": project.project_criteria,
+            "project_skillset": project.project_skillset,
+            "project_instructions": project.project_instructions,
+            "open_house": project.open_house,
+            "employment_history": project.employment_history,
+            "employment_opportunities": project.employment_opportunities,
+            "employment_benefits": project.employment_benefits,
+            "committed": project.committed,
+            "other_projects": project.other_projects,
+            "applied_students": project.applied_students,
+            "approved_students": project.approved_students,
+            "confirmed_students": project.confirmed_students
         } for project in projects]
 
         return jsonify(project_data), 200  
@@ -144,24 +190,38 @@ def get_all_projects():
     finally:
         session.close()
 
-@app.route('/user/<string:email>', methods=['GET'])
-def get_one_user(email):
+@app.route('/user/<int:id>', methods=['GET'])
+def get_one_user(id):
     session = Session()
 
     try:
-        user = session.query(User).filter_by(email=email).first()
+        user = session.query(User).filter_by(id=id).first()
 
         if user:
             user_data = {
+                "id": user.id,
                 "first_name": user.first_name,
                 "last_name": user.last_name,
+                "ucid": user.ucid,
                 "email": user.email,
                 "phone": user.phone,
                 "roles": user.roles,
                 "major": user.major,
                 "minor": user.minor,
                 "specialization": user.specialization,
-                "resume": user.resume
+                "resume": user.resume,
+                "position_title": user.position_title,
+                "org_name": user.org_name,
+                "org_category": user.org_category,
+                "org_industry": user.org_industry,
+                "org_website": user.org_website,
+                "org_address": user.org_address,
+                "track": user.track,
+                "applied_projects": user.applied_projects,
+                "approved_projects": user.approved_projects,
+                "committed_project": user.committed_project,
+                "project_manager": user.project_manager,
+                "password": user.password 
             }
             return jsonify(user_data), 200  
         else:
@@ -172,6 +232,7 @@ def get_one_user(email):
     finally:
         session.close()
 
+
 @app.route('/project/<int:id>', methods=['GET'])
 def get_one_project(id):
     session = Session()
@@ -181,14 +242,37 @@ def get_one_project(id):
 
         if project:
             project_data = {
-                "project_name": project.project_name,
-                "org_name": project.org_name,
-                "project_description": project.project_description,
+                "id": project.id,
+                "approved": project.approved,
                 "year": project.year,
                 "semester": project.semester,
+                "org_name": project.org_name,
+                "org_category": project.org_category,
+                "org_industry": project.org_industry,
+                "org_website": project.org_website,
+                "org_address": project.org_address,
                 "contact_first_name": project.contact_first_name,
                 "contact_last_name": project.contact_last_name,
-                "contact_email": project.contact_email
+                "contact_position_title": project.contact_position_title,
+                "contact_phone": project.contact_phone,
+                "contact_email": project.contact_email,
+                "org_document": project.org_document,
+                "project_document": project.project_document,
+                "agreement_document": project.agreement_document,
+                "project_name": project.project_name,
+                "project_description": project.project_description,
+                "project_criteria": project.project_criteria,
+                "project_skillset": project.project_skillset,
+                "project_instructions": project.project_instructions,
+                "open_house": project.open_house,
+                "employment_history": project.employment_history,
+                "employment_opportunities": project.employment_opportunities,
+                "employment_benefits": project.employment_benefits,
+                "committed": project.committed,
+                "other_projects": project.other_projects,
+                "applied_students": project.applied_students,
+                "approved_students": project.approved_students,
+                "confirmed_students": project.confirmed_students
             }
             return jsonify(project_data), 200  
         else:
@@ -199,7 +283,6 @@ def get_one_project(id):
     finally:
         session.close()
 
-#TEST ENDPOINT
 @app.route('/createproject', methods=['POST'])
 def create_project():
     data = request.get_json()
@@ -208,6 +291,7 @@ def create_project():
     try:
         new_project = Project(
             year=data['year'],
+            approved=data['approved'],
             semester=data['semester'],
             org_name=data['org_name'],
             org_category=data['org_category'],
@@ -219,7 +303,9 @@ def create_project():
             contact_position_title=data['contact_position_title'],
             contact_phone=data['contact_phone'],
             contact_email=data['contact_email'],
-            document=data.get('document', None),  
+            org_document=data['org_document'],
+            project_document=data['project_document'],
+            agreement_document=data['agreement_document'],
             project_name=data['project_name'],
             project_description=data['project_description'],
             project_criteria=data['project_criteria'],
@@ -319,6 +405,8 @@ def approve_student(project_id, student_id):
         approved_students.append(student.email)  
         project.approved_students = json.dumps(approved_students)  
 
+        project.approved = "1"
+
         session.commit()
 
         return jsonify({"message": "Student successfully approved for the project!"}), 200
@@ -368,6 +456,136 @@ def commit_to_project(user_id):
 
     finally:
         session.close()
+
+@app.route('/user/<int:id>', methods=['DELETE'])
+def delete_user(id):
+    session = Session()
+
+    try:
+        user = session.query(User).filter_by(id=id).first()
+
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        session.delete(user)
+        session.commit()
+
+        return jsonify({"message": "User deleted successfully!"}), 200
+
+    except Exception as e:
+        session.rollback()
+        return jsonify({"error": str(e)}), 400
+
+    finally:
+        session.close()
+
+@app.route('/user/<int:id>', methods=['PATCH'])
+def update_user(id):
+    data = request.get_json()
+    session = Session()
+
+    try:
+        user = session.query(User).filter_by(id=id).first()
+
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        user.first_name = data.get('first_name', user.first_name)
+        user.last_name = data.get('last_name', user.last_name)
+        user.ucid = data.get('ucid', user.ucid)
+        user.email = data.get('email', user.email)
+        user.phone = data.get('phone', user.phone)
+        user.roles = data.get('roles', user.roles)
+        user.major = data.get('major', user.major)
+        user.minor = data.get('minor', user.minor)
+        user.specialization = data.get('specialization', user.specialization)
+        
+        session.commit()
+
+        return jsonify({"message": "User updated successfully!"}), 200
+
+    except Exception as e:
+        session.rollback()
+        return jsonify({"error": str(e)}), 400
+
+    finally:
+        session.close()
+
+@app.route('/project/<int:id>', methods=['DELETE'])
+def delete_project(id):
+    session = Session()
+
+    try:
+        project = session.query(Project).filter_by(id=id).first()
+
+        if not project:
+            return jsonify({"error": "Project not found"}), 404
+
+        session.delete(project)
+        session.commit()
+
+        return jsonify({"message": "Project deleted successfully!"}), 200
+
+    except Exception as e:
+        session.rollback()
+        return jsonify({"error": str(e)}), 400
+
+    finally:
+        session.close()
+
+@app.route('/project/<int:id>', methods=['PATCH'])
+def update_project(id):
+    data = request.get_json()
+    session = Session()
+
+    try:
+        project = session.query(Project).filter_by(id=id).first()
+
+        if not project:
+            return jsonify({"error": "Project not found"}), 404
+
+        project.approved = data.get('approved', project.approved)
+        project.year = data.get('year', project.year)
+        project.semester = data.get('semester', project.semester)
+        project.org_name = data.get('org_name', project.org_name)
+        project.org_category = data.get('org_category', project.org_category)
+        project.org_industry = data.get('org_industry', project.org_industry)
+        project.org_website = data.get('org_website', project.org_website)
+        project.org_address = data.get('org_address', project.org_address)
+        project.contact_first_name = data.get('contact_first_name', project.contact_first_name)
+        project.contact_last_name = data.get('contact_last_name', project.contact_last_name)
+        project.contact_position_title = data.get('contact_position_title', project.contact_position_title)
+        project.contact_phone = data.get('contact_phone', project.contact_phone)
+        project.contact_email = data.get('contact_email', project.contact_email)
+        project.org_document = data.get('org_document', project.org_document)
+        project.project_document = data.get('project_document', project.project_document)
+        project.agreement_document = data.get('agreement_document', project.agreement_document)
+        project.project_name = data.get('project_name', project.project_name)
+        project.project_description = data.get('project_description', project.project_description)
+        project.project_criteria = data.get('project_criteria', project.project_criteria)
+        project.project_skillset = data.get('project_skillset', project.project_skillset)
+        project.project_instructions = data.get('project_instructions', project.project_instructions)
+        project.open_house = data.get('open_house', project.open_house)
+        project.employment_history = data.get('employment_history', project.employment_history)
+        project.employment_opportunities = data.get('employment_opportunities', project.employment_opportunities)
+        project.employment_benefits = data.get('employment_benefits', project.employment_benefits)
+        project.committed = data.get('committed', project.committed)
+        project.other_projects = data.get('other_projects', project.other_projects)
+        project.applied_students = data.get('applied_students', project.applied_students)
+        project.approved_students = data.get('approved_students', project.approved_students)
+        project.confirmed_students = data.get('confirmed_students', project.confirmed_students)
+
+        session.commit()
+
+        return jsonify({"message": "Project updated successfully!"}), 200
+
+    except Exception as e:
+        session.rollback()
+        return jsonify({"error": str(e)}), 400
+
+    finally:
+        session.close()
+
 
 
 if __name__ == '__main__':

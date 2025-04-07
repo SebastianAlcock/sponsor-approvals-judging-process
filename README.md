@@ -31,6 +31,9 @@
 
 
 ##### Using the backend 
+
+## Install required dependencies 
+Run pip install -r requirements.txt 
 ## Run the Application: flask run 
 ## View the database:  
     - 2 methods: 
@@ -58,7 +61,7 @@ curl -X POST http://127.0.0.1:5000/register-student \
 curl -X POST http://127.0.0.1:5000/register-sponsor \
 -H "Content-Type: application/json" \
 -d '{
-    "first_name": "John",
+    "first_name": "James",
     "last_name": "Doe",
     "email": "john.doe@techcorp.com",
     "phone": "123-456-7890",
