@@ -42,14 +42,14 @@ Run pip install -r requirements.txt
             - run sqlite3, .open capstone.db, .tables
 
 ## Using the API routes 
-# 1. POST /register-student: Register a Student
+# 1. POST /register-student: Register a Student 
 curl -X POST http://127.0.0.1:5000/register-student \
 -H "Content-Type: application/json" \
 -d '{
-    "first_name": "Alice",
+    "first_name": "Allison",
     "last_name": "Smith",
     "ucid": "A12345",
-    "email": "alice.smith@example.com",
+    "email": "allison.smith@example.com",
     "phone": "987-654-3210",
     "password": "password456",
     "major": "Software Engineering",
@@ -61,9 +61,9 @@ curl -X POST http://127.0.0.1:5000/register-student \
 curl -X POST http://127.0.0.1:5000/register-sponsor \
 -H "Content-Type: application/json" \
 -d '{
-    "first_name": "James",
-    "last_name": "Doe",
-    "email": "john.doe@techcorp.com",
+    "first_name": "Mike",
+    "last_name": "Ema",
+    "email": "mike.ema@google.com",
     "phone": "123-456-7890",
     "password": "password789",
     "position_title": "Project Manager",
@@ -78,8 +78,8 @@ curl -X POST http://127.0.0.1:5000/register-sponsor \
 curl -X POST http://127.0.0.1:5000/login \
 -H "Content-Type: application/json" \
 -d '{
-    "email": "alice.smith@example.com",
-    "password": "password456"
+    "email": "mike.ema@google.com",
+    "password": "password789"
 }'
 
 # 4. GET /users: Get All Users

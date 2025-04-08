@@ -34,16 +34,33 @@ export default function Directory() {
     { key: "project_name", name: "Project Name" },
     { key: "org_name", name: "Organization" },
     { key: "semester", name: "Semester" },
-    { key: "year", name: "Year" }
+    { key: "year", name: "Year" },
+    { key: "contact_first_name", name: "Contact First" },
+    { key: "contact_last_name", name: "Contact Last" },
+    { key: "contact_email", name: "Contact Email" },
+    { key: "employment_opportunities", name: "Job Opportunities" },
+    { key: "committed", name: "Commitment" },
+    { key: "approved", name: "Approved" },
   ];
-
+  
   const userColumns = [
     { key: "first_name", name: "First Name" },
     { key: "last_name", name: "Last Name" },
     { key: "email", name: "Email" },
-    { key: "roles", name: "Roles" }
+    { key: "phone", name: "Phone" },
+    { key: "roles", name: "Roles" },
+    { key: "ucid", name: "UCID" },
+    { key: "major", name: "Major" },
+    { key: "minor", name: "Minor" },
+    { key: "specialization", name: "Specialization" },
+    { key: "org_name", name: "Org Name" },
+    { key: "org_category", name: "Org Category" },
+    { key: "org_industry", name: "Org Industry" },
+    { key: "org_website", name: "Org Website" },
+    { key: "org_address", name: "Org Address" },
+    { key: "position_title", name: "Position Title" },
   ];
-
+  
   const handleRowClick = (args) => {
     console.log("Row clicked:", args.row);
     const row = args.row;

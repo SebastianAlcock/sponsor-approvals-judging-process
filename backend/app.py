@@ -54,12 +54,24 @@ def register_sponsor():
             phone=data['phone'],
             password=hashed_password,
             roles='sponsor',
-            position_title=data['position_title'],
-            org_name=data['org_name'],
-            org_category=data['org_category'],
-            org_industry=data['org_industry'],
-            org_website=data['org_website'],
-            org_address=data['org_address']
+            position_title=data.get('position_title'),
+            org_name=data.get('org_name'),
+            org_category=data.get('org_category'),
+            org_industry=data.get('org_industry'),
+            org_website=data.get('org_website'),
+            org_address=data.get('org_address'),
+            
+            # explicitly set student fields as None
+            ucid=None,
+            major=None,
+            minor=None,
+            specialization=None,
+            resume=None,
+            track=None,
+            applied_projects=None,
+            approved_projects=None,
+            committed_project=None,
+            project_manager=None
         )
         session.add(new_sponsor)
         session.commit()
@@ -145,7 +157,6 @@ def get_all_users():
 @app.route('/projects', methods=['GET'])
 def get_all_projects():
     session = Session()
-
     try:
         projects = session.query(Project).all()
 
