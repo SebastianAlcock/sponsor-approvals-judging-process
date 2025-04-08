@@ -164,9 +164,11 @@ def get_all_projects():
             "contact_position_title": project.contact_position_title,
             "contact_phone": project.contact_phone,
             "contact_email": project.contact_email,
+            '''
             "org_document": project.org_document,
             "project_document": project.project_document,
             "agreement_document": project.agreement_document,
+            '''
             "project_name": project.project_name,
             "project_description": project.project_description,
             "project_criteria": project.project_criteria,
@@ -256,9 +258,11 @@ def get_one_project(id):
                 "contact_position_title": project.contact_position_title,
                 "contact_phone": project.contact_phone,
                 "contact_email": project.contact_email,
+                '''
                 "org_document": project.org_document,
                 "project_document": project.project_document,
                 "agreement_document": project.agreement_document,
+                '''
                 "project_name": project.project_name,
                 "project_description": project.project_description,
                 "project_criteria": project.project_criteria,
@@ -285,43 +289,75 @@ def get_one_project(id):
 
 @app.route('/createproject', methods=['POST'])
 def create_project():
-    data = request.get_json()
+    data = request.form  # Getting form data
     session = Session()
 
     try:
+        # Extracting form fields from the request
+        year = data['year']
+        semester = data['semester']
+        org_name = data['org_name']
+        org_category = data['org_category']
+        org_industry = data['org_industry']
+        org_website = data['org_website']
+        org_address = data['org_address']
+        contact_first_name = data['contact_first_name']
+        contact_last_name = data['contact_last_name']
+        contact_position_title = data['contact_position_title']
+        contact_phone = data['contact_phone']
+        contact_email = data['contact_email']
+        project_name = data['project_name']
+        project_description = data['project_description']
+        project_criteria = data['project_criteria']
+        project_skillset = data['project_skillset']
+        project_instructions = data['project_instructions']
+        open_house = data['open_house']
+        employment_history = data['employment_history']
+        employment_opportunities = data['employment_opportunities']
+        employment_benefits = data['employment_benefits']
+        committed = data['committed']
+        other_projects = data['other_projects']
+        applied_students = data.get('applied_students') 
+        approved_students = data.get('approved_students')  
+        confirmed_students = data.get('confirmed_students')  
+
+        org_document = request.files['org_document'].read() 
+        project_document = request.files['project_document'].read() 
+        agreement_document = request.files['agreement_document'].read()  
+
         new_project = Project(
-            year=data['year'],
-            approved=data['approved'],
-            semester=data['semester'],
-            org_name=data['org_name'],
-            org_category=data['org_category'],
-            org_industry=data['org_industry'],
-            org_website=data['org_website'],
-            org_address=data['org_address'],
-            contact_first_name=data['contact_first_name'],
-            contact_last_name=data['contact_last_name'],
-            contact_position_title=data['contact_position_title'],
-            contact_phone=data['contact_phone'],
-            contact_email=data['contact_email'],
-            org_document=data['org_document'],
-            project_document=data['project_document'],
-            agreement_document=data['agreement_document'],
-            project_name=data['project_name'],
-            project_description=data['project_description'],
-            project_criteria=data['project_criteria'],
-            project_skillset=data['project_skillset'],
-            project_instructions=data['project_instructions'],
-            open_house=data['open_house'],
-            employment_history=data['employment_history'],
-            employment_opportunities=data['employment_opportunities'],
-            employment_benefits=data['employment_benefits'],
-            committed=data['committed'],
-            other_projects=data['other_projects'],
-            applied_students=data.get('applied_students', []),  
-            approved_students=data.get('approved_students', []),  
-            confirmed_students=data.get('confirmed_students', [])  
+            year=year,
+            semester=semester,
+            org_name=org_name,
+            org_category=org_category,
+            org_industry=org_industry,
+            org_website=org_website,
+            org_address=org_address,
+            contact_first_name=contact_first_name,
+            contact_last_name=contact_last_name,
+            contact_position_title=contact_position_title,
+            contact_phone=contact_phone,
+            contact_email=contact_email,
+            project_name=project_name,
+            project_description=project_description,
+            project_criteria=project_criteria,
+            project_skillset=project_skillset,
+            project_instructions=project_instructions,
+            open_house=open_house,
+            employment_history=employment_history,
+            employment_opportunities=employment_opportunities,
+            employment_benefits=employment_benefits,
+            committed=committed,
+            other_projects=other_projects,
+            applied_students=applied_students,
+            approved_students=approved_students,
+            confirmed_students=confirmed_students,
+            org_document=org_document,  
+            project_document=project_document, 
+            agreement_document=agreement_document  
         )
 
+        # Add and commit the new project to the database
         session.add(new_project)
         session.commit()
 
@@ -333,6 +369,10 @@ def create_project():
 
     finally:
         session.close()
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
 
 @app.route('/apply/<int:user_id>', methods=['PATCH'])
 def apply_to_project(user_id):
@@ -589,4 +629,5 @@ def update_project(id):
 
 
 if __name__ == '__main__':
+    print(app.url_map)
     app.run(debug=True)
