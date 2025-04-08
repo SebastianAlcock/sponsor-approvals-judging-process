@@ -157,7 +157,6 @@ def get_all_users():
 @app.route('/projects', methods=['GET'])
 def get_all_projects():
     session = Session()
-
     try:
         projects = session.query(Project).all()
 

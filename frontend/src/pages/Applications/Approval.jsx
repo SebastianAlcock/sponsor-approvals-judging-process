@@ -10,7 +10,9 @@ export default function Approval() {
   const [formData, setFormData] = useState({
     user_email: user?.email || "",
     sponsor_org: "",
-    project_title: ""
+    project_title: "",
+    submitter_name: `${user?.first_name || ""} ${user?.last_name || ""}`,
+    submitter_email: user?.email || "",
   });
 
   // Dummy sponsor organization data
@@ -24,7 +26,6 @@ export default function Approval() {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
 
-    // Update selected org and reset project title
     if (name === "sponsor_org") {
       setSelectedOrg(value);
       setFormData(prev => ({ ...prev, project_title: "" }));
@@ -33,8 +34,6 @@ export default function Approval() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Submit logic here (replace with api.post("/approve", formData) when ready)
     console.log("Submitted Approval:", formData);
     alert("Approval submitted!");
     navigate("/");
@@ -47,8 +46,6 @@ export default function Approval() {
         <h1>Capstone Sponsor Approval Form</h1>
 
         <form className="proposal form" onSubmit={handleSubmit}>
-          <label className="label">Student Email *</label>
-          <input type="email" name="user_email" value={formData.user_email} readOnly />
 
           <label className="label">Sponsor Organization *</label>
           <select name="sponsor_org" onChange={handleChange} value={formData.sponsor_org} required>
@@ -65,6 +62,18 @@ export default function Approval() {
               <option key={title} value={title}>{title}</option>
             ))}
           </select>
+
+          <label className="label">Student Email *</label>
+          <input type="email" name="user_email" value={formData.user_email} readOnly />
+
+          <hr />
+          <h2>Submitter Information</h2>
+
+          <label className="label">Your Name</label>
+          <input type="text" name="submitter_name" value={formData.submitter_name} readOnly />
+
+          <label className="label">Your Email</label>
+          <input type="email" name="submitter_email" value={formData.submitter_email} readOnly />
 
           <button type="submit">Submit</button>
         </form>
