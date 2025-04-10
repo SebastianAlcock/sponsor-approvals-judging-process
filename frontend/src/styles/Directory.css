@@ -53,5 +53,12 @@
     overflow-x: auto;
   }
   
+  .rdg-header-row .rdg-cell {
+    white-space: normal !important;
+    word-break: break-word;
+    text-align: center;
+    padding: 10px;
+    font-weight: bold;
+  }
   
   

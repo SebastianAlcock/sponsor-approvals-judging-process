@@ -18,6 +18,7 @@ export default function Directory() {
     setLoading(true);
     setError("");
     const endpoint = activeTab === "projects" ? "/projects" : "/users";
+
     api.get(endpoint)
       .then(res => {
         if (activeTab === "projects") {
@@ -26,45 +27,71 @@ export default function Directory() {
           setUsers(res.data);
         }
       })
-      .catch(err => setError("Failed to load data"))
+      .catch(() => setError("Failed to load data"))
       .finally(() => setLoading(false));
   }, [activeTab]);
 
   const projectColumns = [
     { key: "project_name", name: "Project Name" },
-    { key: "org_name", name: "Organization" },
+    { key: "org_name", name: "Organization Name" },
     { key: "semester", name: "Semester" },
     { key: "year", name: "Year" },
-    { key: "contact_first_name", name: "Contact First" },
-    { key: "contact_last_name", name: "Contact Last" },
+    { key: "contact_first_name", name: "Contact First Name" },
+    { key: "contact_last_name", name: "Contact Last Name" },
     { key: "contact_email", name: "Contact Email" },
-    { key: "employment_opportunities", name: "Job Opportunities" },
-    { key: "committed", name: "Commitment" },
-    { key: "approved", name: "Approved" },
+    { key: "employment_opportunities", name: "Employment Opportunities" },
+    { key: "committed", name: "Commitment Status" },
+    { key: "approved", name: "Approval Status" },
+    {
+      key: "view",
+      name: "Action",
+      renderCell: ({ row }) => (
+        <button
+          onClick={(e) => {
+            e.stopPropagation(); // prevent row click from firing
+            navigate(`/project/${row.id}`);
+          }}
+          style={{
+            padding: "6px 12px",
+            backgroundColor: "#007bff",
+            color: "#fff",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer"
+          }}
+        >
+          View
+        </button>
+      )
+    }
   ];
-  
-  const userColumns = [
+
+  const studentColumns = [
     { key: "first_name", name: "First Name" },
     { key: "last_name", name: "Last Name" },
     { key: "email", name: "Email" },
     { key: "phone", name: "Phone" },
-    { key: "roles", name: "Roles" },
     { key: "ucid", name: "UCID" },
     { key: "major", name: "Major" },
     { key: "minor", name: "Minor" },
     { key: "specialization", name: "Specialization" },
-    { key: "org_name", name: "Org Name" },
-    { key: "org_category", name: "Org Category" },
-    { key: "org_industry", name: "Org Industry" },
-    { key: "org_website", name: "Org Website" },
-    { key: "org_address", name: "Org Address" },
+  ];
+
+  const sponsorColumns = [
+    { key: "first_name", name: "First Name" },
+    { key: "last_name", name: "Last Name" },
+    { key: "email", name: "Email" },
+    { key: "phone", name: "Phone" },
+    { key: "org_name", name: "Organization Name" },
+    { key: "org_category", name: "Organization Category" },
+    { key: "org_industry", name: "Industry" },
+    { key: "org_website", name: "Website URL" },
+    { key: "org_address", name: "Organization Address" },
     { key: "position_title", name: "Position Title" },
   ];
-  
+
   const handleRowClick = (args) => {
-    console.log("Row clicked:", args.row);
     const row = args.row;
-  
     if (activeTab === "projects") {
       navigate(`/project/${row.id}`);
     } else {
@@ -72,15 +99,16 @@ export default function Directory() {
     }
   };
 
+  const filteredUsers = (role) => users.filter(user => user.roles === role);
+
   return (
     <>
       <Navbar currentPage="directory" />
       <div className="directory page">
-        <h2>Directory</h2>
-
         <div className="tabs">
           <button className={activeTab === "projects" ? "active" : ""} onClick={() => setActiveTab("projects")}>Projects</button>
-          <button className={activeTab === "users" ? "active" : ""} onClick={() => setActiveTab("users")}>Users</button>
+          <button className={activeTab === "students" ? "active" : ""} onClick={() => setActiveTab("students")}>Students</button>
+          <button className={activeTab === "sponsors" ? "active" : ""} onClick={() => setActiveTab("sponsors")}>Sponsors</button>
         </div>
 
         {loading && <div className="loadingSpinner"></div>}
@@ -88,8 +116,20 @@ export default function Directory() {
 
         {!loading && !error && (
           <DataGrid
-            columns={activeTab === "projects" ? projectColumns : userColumns}
-            rows={activeTab === "projects" ? projects : users}
+            columns={
+              activeTab === "projects"
+                ? projectColumns
+                : activeTab === "students"
+                ? studentColumns
+                : sponsorColumns
+            }
+            rows={
+              activeTab === "projects"
+                ? projects
+                : activeTab === "students"
+                ? filteredUsers("student")
+                : filteredUsers("sponsor")
+            }
             onRowClick={handleRowClick}
             className="rdg-light"
             rowHeight={50}
