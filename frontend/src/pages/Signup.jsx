@@ -86,10 +86,42 @@ export default function Signup() {
                 <>
                   <input name="position_title" placeholder="Position Title" value={formData.position_title} onChange={handleChange} required />
                   <input name="org_name" placeholder="Organization Name" value={formData.org_name} onChange={handleChange} required />
-                  <input name="org_category" placeholder="Organization Category" value={formData.org_category} onChange={handleChange} required />
-                  <input name="org_industry" placeholder="Industry" value={formData.org_industry} onChange={handleChange} required />
                   <input name="org_website" placeholder="Website URL" value={formData.org_website} onChange={handleChange} />
                   <input name="org_address" placeholder="Address" value={formData.org_address} onChange={handleChange} required />
+                  <label className="label">Which best describes your organization or affiliation? *</label>
+                  <select name="org_category" value={formData.org_category} onChange={handleChange} required>
+                    <option value="">-- please select --</option>
+                    <option value="Public Service">Public Service</option>
+                    <option value="EDC Company">EDC Company</option>
+                    <option value="Small Business">Small Business</option>
+                    <option value="Medium Size Business">Medium Size Business</option>
+                    <option value="Large Business">Large Business</option>
+                    <option value="Fortune 500 Company">Fortune 500 Company</option>
+                    <option value="Fortune 1000 Company">Fortune 1000 Company</option>
+                    <option value="Student Entrepreneur">Student Entrepreneur</option>
+                    <option value="External Entrepreneur">External Entrepreneur</option>
+                    <option value="NJIT Faculty">NJIT Faculty</option>
+                    <option value="NJIT Department">NJIT Department</option>
+                    <option value="Other University">Other University</option>
+                    <option value="Other Non-Profit Organization">Other Non-Profit Organization</option>
+                  </select>
+
+                  <label className="label">Which best describes your industry? *</label>
+                  <select name="org_industry" value={formData.org_industry} onChange={handleChange} required>
+                    <option value="">-- please select --</option>
+                    <option value="Manufacturing/R">Manufacturing/R</option>
+                    <option value="Non-Profit/Charity">Non-Profit/Charity</option>
+                    <option value="Web/IT Professional Services">Web/IT Professional Services</option>
+                    <option value="Education">Education</option>
+                    <option value="Advertising/Marketing/PR">Advertising/Marketing/PR</option>
+                    <option value="Government/Military/Aerospace">Government/Military/Aerospace</option>
+                    <option value="Finance/Insurance/Real Estate">Finance/Insurance/Real Estate</option>
+                    <option value="Travel/Transportation/Hospitality">Travel/Transportation/Hospitality</option>
+                    <option value="Media/Entertainment/Arts">Media/Entertainment/Arts</option>
+                    <option value="Workforce Development/Professional Training">Workforce Development/Professional Training</option>
+                    <option value="Retail/Wholesale/Trade">Retail/Wholesale/Trade</option>
+                    <option value="Healthcare/Pharmaceutical/Biotech">Healthcare/Pharmaceutical/Biotech</option>
+                  </select>
                 </>
               )}
 
