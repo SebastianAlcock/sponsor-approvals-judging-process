@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import Navbar from "./Navbar";
-import "../styles/Form.css"; // optional for shared styling
+import "../styles/Signup.css";
 
 export default function Signup() {
   const [role, setRole] = useState("");
@@ -56,7 +56,7 @@ export default function Signup() {
 
         {!role ? (
           <div className="role-select-container">
-            <p>Choose your role to begin:</p>
+            <h4>Please select your role to begin:</h4>
             <div className="role-buttons">
               <button onClick={() => setRole("student")}>🎓 I'm a Student</button>
               <button onClick={() => setRole("sponsor")}>🏢 I'm a Sponsor</button>
@@ -64,17 +64,18 @@ export default function Signup() {
           </div>
         ) : (
           <>
-            <form onSubmit={handleSubmit}>
-              <h3>{role.charAt(0).toUpperCase() + role.slice(1)} Registration</h3>
+            <form className={"form"} onSubmit={handleSubmit}>
 
               <input name="first_name" placeholder="First Name" value={formData.first_name} onChange={handleChange} required />
               <input name="last_name" placeholder="Last Name" value={formData.last_name} onChange={handleChange} required />
               <input name="email" type="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
               <input name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} required />
               <input name="password" type="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
+              <input name="confirm_password" type="password" placeholder="Confirm Password" value={formData.password} onChange={handleChange} required />
 
               {role === "student" && (
                 <>
+                  <h3>Student Specific Information:</h3>
                   <input name="ucid" placeholder="UCID" value={formData.ucid} onChange={handleChange} required />
                   <input name="major" placeholder="Major" value={formData.major} onChange={handleChange} />
                   <input name="minor" placeholder="Minor" value={formData.minor} onChange={handleChange} />
@@ -84,13 +85,11 @@ export default function Signup() {
 
               {role === "sponsor" && (
                 <>
+                  <h3>Sponsor Specific Information:</h3>
                   <input name="position_title" placeholder="Position Title" value={formData.position_title} onChange={handleChange} required />
                   <input name="org_name" placeholder="Organization Name" value={formData.org_name} onChange={handleChange} required />
-                  <input name="org_website" placeholder="Website URL" value={formData.org_website} onChange={handleChange} />
-                  <input name="org_address" placeholder="Address" value={formData.org_address} onChange={handleChange} required />
-                  <label className="label">Which best describes your organization or affiliation? *</label>
                   <select name="org_category" value={formData.org_category} onChange={handleChange} required>
-                    <option value="">-- please select --</option>
+                    <option style={{display:"none"}} defaultValue>-- Which best describes your organization or affiliation? --</option>
                     <option value="Public Service">Public Service</option>
                     <option value="EDC Company">EDC Company</option>
                     <option value="Small Business">Small Business</option>
@@ -105,10 +104,8 @@ export default function Signup() {
                     <option value="Other University">Other University</option>
                     <option value="Other Non-Profit Organization">Other Non-Profit Organization</option>
                   </select>
-
-                  <label className="label">Which best describes your industry? *</label>
                   <select name="org_industry" value={formData.org_industry} onChange={handleChange} required>
-                    <option value="">-- please select --</option>
+                    <option style={{display:"none"}} defaultValue>-- Which best describes your industry? --</option>
                     <option value="Manufacturing/R">Manufacturing/R</option>
                     <option value="Non-Profit/Charity">Non-Profit/Charity</option>
                     <option value="Web/IT Professional Services">Web/IT Professional Services</option>
@@ -122,11 +119,15 @@ export default function Signup() {
                     <option value="Retail/Wholesale/Trade">Retail/Wholesale/Trade</option>
                     <option value="Healthcare/Pharmaceutical/Biotech">Healthcare/Pharmaceutical/Biotech</option>
                   </select>
+                  <input name="org_website" placeholder="Website URL" value={formData.org_website} onChange={handleChange} />
+                  <input name="org_address" placeholder="Address" value={formData.org_address} onChange={handleChange} required />
                 </>
               )}
 
-              <button type="submit">Register</button>
-              <button type="button" onClick={() => setRole("")} className="secondary">⬅ Back</button>
+              <div className="buttonArea">
+                <button type="submit">Register</button>
+                <button type="button" onClick={() => setRole("")} className="secondary">Back to Role Select</button>
+              </div>
               {success && <p style={{ color: "green" }}>{success}</p>}
               {error && <p style={{ color: "red" }}>{error}</p>}
             </form>
@@ -134,7 +135,7 @@ export default function Signup() {
         )}
 
         <br />
-        Have an account already? <Link to="/login">Log In Here</Link>
+        <span className="suggestion">Have an account already? <Link to="/login">Log In Here</Link></span>
       </div>
     </>
   );

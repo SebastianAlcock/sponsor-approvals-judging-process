@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../services/api";
+import "../styles/Login.css";
 
 import Navbar from "./Navbar";
 
@@ -44,7 +45,7 @@ export default function Login() {
 
       <div className="login page">
         <h2>Login</h2>
-        <form onSubmit={handleSubmit}>
+        <form className="form" onSubmit={handleSubmit}>
           <input
             name="email"
             type="email"
@@ -66,7 +67,7 @@ export default function Login() {
           {error && <p style={{ color: "red" }}>{error}</p>}
         </form>
         <br/>
-        Don't have an account? <Link to='/signup'>Sign Up Here</Link>
+        <span className="suggestion">Don't have an account? <Link to='/signup'>Sign Up Here</Link></span>
       </div>
     </>
   );

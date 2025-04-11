@@ -328,9 +328,9 @@ def create_project():
         employment_benefits = data['employment_benefits']
         committed = data['committed']
         other_projects = data['other_projects']
-        applied_students = data.get('applied_students') 
-        approved_students = data.get('approved_students')  
-        confirmed_students = data.get('confirmed_students')  
+        applied_students = data['applied_students']
+        approved_students = data.get['approved_students'] 
+        confirmed_students = data.get['confirmed_students'] 
 
         org_document = request.files['org_document'].read() 
         project_document = request.files['project_document'].read() 

@@ -1,64 +1,83 @@
-.directory.page {
-    padding: 2rem;
-    font-family: sans-serif;
-  }
+.datagridContainer {
+  width: 100%;
+}
   
-  .tabs {
-    margin-bottom: 1rem;
-  }
+.tabs button {
+  margin-right: 1rem;
+  padding: 0.8rem 1.2rem;
+  border: none;
+  border-radius: 4px 4px 0 0;
+  background-color: #eee;
+  font-weight: bold;
+  cursor: pointer;
+}
   
-  .tabs button {
-    margin-right: 1rem;
-    padding: 0.5rem 1.2rem;
-    border: none;
-    border-radius: 4px;
-    background-color: #eee;
-    font-weight: bold;
-    cursor: pointer;
-  }
+.tabs button.active {
+  background-color: #007bff;
+  color: white;
+}
   
-  .tabs button.active {
-    background-color: #007bff;
-    color: white;
-  }
-  
-  /* Mimic your table style */
-  .rdg {
-    border: none;
-    font-family: inherit;
-    font-size: 1rem;
-    background-color: white;
-  }
-  
-  .rdg-header-row {
-    background-color: #f5f5f5;
-    border-bottom: 1px solid #ddd;
-    font-weight: bold;
-  }
-  
-  .rdg-cell {
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .rdg-row {
-    cursor: pointer;
-  }
-  
-  .rdg-row:hover {
-    background-color: #f2f2f2;
-  }
+.tab-bottom {
+  background-color: #007bff;
+  width: 100%;
+  height: 3px;
+  margin-bottom: 20px;
+}
 
-  .directory .rdg-light {
-    overflow-x: auto;
-  }
+.rdg {
+  border: none;
+  border-left: 1px solid #ddd;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  font-family: inherit;
+  font-size: 1rem;
+  background-color: white;
   
-  .rdg-header-row .rdg-cell {
-    white-space: normal !important;
-    word-break: break-word;
-    text-align: center;
-    padding: 10px;
-    font-weight: bold;
-  }
+  height: auto;
+
+  width: -moz-available;
+  width: -webkit-fill-available;
+  width: stretch;
+}
   
+.rdg-header-row {
+  background-color: #f5f5f5;
+  font-weight: bold;
+}
   
+.rdg-cell {
+  border-bottom: 1px solid #ddd;
+  width: auto;
+}
+  
+.rdg-row {
+  cursor: pointer;
+}
+  
+.rdg-row:hover {
+  background-color: #f2f2f2;
+}
+
+.directory .rdg-light {
+  overflow-x: auto;
+}
+  
+.rdg-header-row .rdg-cell {
+  font-weight: bold;
+}
+
+div[aria-colindex="1"] {
+  text-align: center;
+}
+
+.rdg .eye {
+  color: #007bff;
+  font-size: 30px;
+  vertical-align: middle;
+}
+
+.rdg .eye:hover {
+  color: #00529B;
+  cursor: pointer;
+}

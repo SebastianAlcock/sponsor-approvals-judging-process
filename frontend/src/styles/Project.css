@@ -1,37 +1,39 @@
-h1, h2 {
+.project h1, 
+.project h2 {
     margin-top: 0px;
     text-align: start;
 }
   
-.long {
+.project .long {
     margin: 0;
     padding: 0;
     white-space: pre-wrap;
 }
   
-.long div {
+.project .long div {
     padding: 0 0 10px 0;
 }
   
-table {
+.project table {
     border-top: solid 1px #eee;
     width: 100%;
 }
   
-ul {
+.project ul {
     padding-inline-start: inherit;
     margin: 0;
 }
   
-th {
+.project th {
     width: 30%;
 }
   
-h2 {
+.project h2 {
     margin-top: 30px;
 }
   
-th, td {
+.project th, 
+.project td {
     text-align: start;
     vertical-align: top;
     padding: 1.5em 0;

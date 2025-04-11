@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-//import api from "../../services/api"; // <== use your axios instance here
+import api from "../../services/api"; // <== use your axios instance here
 
 import Navbar from "../Navbar";
 
@@ -88,7 +88,7 @@ export default function Proposal() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      //await api.post("/createproject", formData);  // <== call backend using api instance
+      await api.post("/createproject", formData);  // <== call backend using api instance
       setSuccess("Project Proposal Submitted! Redirecting to home...");
       setError("");
       setTimeout(() => navigate("/"), 2000);
