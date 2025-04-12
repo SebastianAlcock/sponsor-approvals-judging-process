@@ -6,36 +6,61 @@ import "../../styles/Form.css";
 export default function Approval() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
+
   const [selectedOrg, setSelectedOrg] = useState("");
+  const [selectedProject, setSelectedProject] = useState("");
+  const [availableStudents, setAvailableStudents] = useState([]);
   const [formData, setFormData] = useState({
-    user_email: user?.email || "",
+    user_email: "",
     sponsor_org: "",
     project_title: "",
     submitter_name: `${user?.first_name || ""} ${user?.last_name || ""}`,
     submitter_email: user?.email || "",
   });
 
-  // Dummy sponsor organization data
+  // Mock: Sponsor org → projects
   const sponsorProjects = {
     "Org A": ["Project A1", "Project A2"],
     "Org B": ["Project B1", "Project B2", "Project B3"],
     "Org C": ["Project C1"]
   };
 
+  // Mock: Project title → applied students
+  const dummyStudents = {
+    "Project A1": [
+      { first_name: "Alice", last_name: "Johnson", email: "alice@njit.edu" },
+      { first_name: "Bob", last_name: "Smith", email: "bob@njit.edu" }
+    ],
+    "Project B2": [
+      { first_name: "Charlie", last_name: "Lee", email: "charlie@njit.edu" }
+    ],
+    "Project C1": [
+      { first_name: "Diana", last_name: "Kim", email: "diana@njit.edu" },
+      { first_name: "Ethan", last_name: "Chen", email: "ethan@njit.edu" }
+    ]
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
 
     if (name === "sponsor_org") {
       setSelectedOrg(value);
-      setFormData(prev => ({ ...prev, project_title: "" }));
+      setFormData(prev => ({ ...prev, sponsor_org: value, project_title: "", user_email: "" }));
+      setAvailableStudents([]);
+      setSelectedProject("");
+    } else if (name === "project_title") {
+      setSelectedProject(value);
+      setFormData(prev => ({ ...prev, project_title: value, user_email: "" }));
+      setAvailableStudents(dummyStudents[value] || []);
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Submitted Approval:", formData);
-    alert("Approval submitted!");
+    alert("✅ Approval submitted!");
     navigate("/");
   };
 
@@ -46,7 +71,6 @@ export default function Approval() {
         <h1>Capstone Sponsor Approval Form</h1>
 
         <form className="proposal form" onSubmit={handleSubmit}>
-
           <label className="label">Sponsor Organization *</label>
           <select name="sponsor_org" onChange={handleChange} value={formData.sponsor_org} required>
             <option value="">-- Select Sponsor Org --</option>
@@ -56,15 +80,34 @@ export default function Approval() {
           </select>
 
           <label className="label">Project Title *</label>
-          <select name="project_title" onChange={handleChange} value={formData.project_title} required disabled={!selectedOrg}>
+          <select
+            name="project_title"
+            onChange={handleChange}
+            value={formData.project_title}
+            required
+            disabled={!selectedOrg}
+          >
             <option value="">-- Select Project --</option>
             {sponsorProjects[selectedOrg]?.map(title => (
               <option key={title} value={title}>{title}</option>
             ))}
           </select>
 
-          <label className="label">Student Email *</label>
-          <input type="email" name="user_email" value={formData.user_email} readOnly />
+          <label className="label">Student to Approve *</label>
+          <select
+            name="user_email"
+            onChange={handleChange}
+            value={formData.user_email}
+            required
+            disabled={availableStudents.length === 0}
+          >
+            <option value="">-- Select Student --</option>
+            {availableStudents.map(s => (
+              <option key={s.email} value={s.email}>
+                {s.first_name} {s.last_name} ({s.email})
+              </option>
+            ))}
+          </select>
 
           <hr />
           <h2>Submitter Information</h2>

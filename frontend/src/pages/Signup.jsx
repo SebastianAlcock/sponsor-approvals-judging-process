@@ -13,6 +13,7 @@ export default function Signup() {
     email: "",
     phone: "",
     password: "",
+    confirm_password: "",
     major: "",
     minor: "",
     specialization: "",
@@ -34,6 +35,13 @@ export default function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (formData.password !== formData.confirm_password) {
+      setError("Passwords do not match");
+      setSuccess("");
+      return;
+    }
+
     const endpoint = role === "student" ? "/register-student" : "/register-sponsor";
 
     try {
@@ -64,14 +72,13 @@ export default function Signup() {
           </div>
         ) : (
           <>
-            <form className={"form"} onSubmit={handleSubmit}>
-
+            <form className="form" onSubmit={handleSubmit}>
               <input name="first_name" placeholder="First Name" value={formData.first_name} onChange={handleChange} required />
               <input name="last_name" placeholder="Last Name" value={formData.last_name} onChange={handleChange} required />
               <input name="email" type="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
               <input name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} required />
               <input name="password" type="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
-              <input name="confirm_password" type="password" placeholder="Confirm Password" value={formData.password} onChange={handleChange} required />
+              <input name="confirm_password" type="password" placeholder="Confirm Password" value={formData.confirm_password} onChange={handleChange} required />
 
               {role === "student" && (
                 <>
@@ -89,7 +96,7 @@ export default function Signup() {
                   <input name="position_title" placeholder="Position Title" value={formData.position_title} onChange={handleChange} required />
                   <input name="org_name" placeholder="Organization Name" value={formData.org_name} onChange={handleChange} required />
                   <select name="org_category" value={formData.org_category} onChange={handleChange} required>
-                    <option style={{display:"none"}} defaultValue>-- Which best describes your organization or affiliation? --</option>
+                    <option style={{ display: "none" }} defaultValue>-- Which best describes your organization or affiliation? --</option>
                     <option value="Public Service">Public Service</option>
                     <option value="EDC Company">EDC Company</option>
                     <option value="Small Business">Small Business</option>
@@ -105,7 +112,7 @@ export default function Signup() {
                     <option value="Other Non-Profit Organization">Other Non-Profit Organization</option>
                   </select>
                   <select name="org_industry" value={formData.org_industry} onChange={handleChange} required>
-                    <option style={{display:"none"}} defaultValue>-- Which best describes your industry? --</option>
+                    <option style={{ display: "none" }} defaultValue>-- Which best describes your industry? --</option>
                     <option value="Manufacturing/R">Manufacturing/R</option>
                     <option value="Non-Profit/Charity">Non-Profit/Charity</option>
                     <option value="Web/IT Professional Services">Web/IT Professional Services</option>
@@ -128,6 +135,7 @@ export default function Signup() {
                 <button type="submit">Register</button>
                 <button type="button" onClick={() => setRole("")} className="secondary">Back to Role Select</button>
               </div>
+
               {success && <p style={{ color: "green" }}>{success}</p>}
               {error && <p style={{ color: "red" }}>{error}</p>}
             </form>
