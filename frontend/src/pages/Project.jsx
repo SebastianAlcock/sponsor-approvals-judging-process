@@ -1,30 +1,86 @@
 import { useEffect, useState } from "react";
-import Navbar from "./Navbar";
 import { useParams } from "react-router-dom";
-import api from "../services/api";
+import { useNavigate } from "react-router-dom";
+import { FaEye } from "react-icons/fa";
 
 import "../styles/Project.css";
+
+import api from "../services/api";
+
+import Navbar from "./Navbar";
 
 export default function Project() {
   const { id } = useParams();
   const [project, setProject] = useState(null);
 
+  const [studentInfo, setStudentInfo] = useState([]);
+
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     api.get(`/project/${id}`).then(res => {
       setProject(res.data);
+      //console.log(res.data)
     }).catch(err => {
       console.error("Error fetching project:", err);
     });
   }, [id]);
 
+  useEffect(() => {
+    api.get("/users")
+      .then(res => {
+        if (project) {
+          var appliedStudents = [];
+          var approvedStudents = [];
+          var confirmedStudents = [];
+
+          project.applied_students.replace(/\[|\]| /g,'').split(',').forEach(id => {
+            var students = res.data.filter(function(user){return `${user.id}` === id})[0];
+            appliedStudents = [...appliedStudents, students];
+          })
+          project.approved_students.replace(/\[|\]| /g,'').split(',').forEach(id => {
+            var students = res.data.filter(function(user){return `${user.id}` === id})[0];
+            approvedStudents = [...approvedStudents, students];
+          })
+          project.confirmed_students.replace(/\[|\]| /g,'').split(',').forEach(id => {
+            var students = res.data.filter(function(user){return `${user.id}` === id})[0];
+            confirmedStudents = [...confirmedStudents, students];
+          })
+          
+          setStudentInfo([appliedStudents, approvedStudents, confirmedStudents]);
+        }
+      }).catch(err => {setError(`Error loading student applicant data: ${err}`)});
+  }, [project]);
+
+  const handleApply = async (e) => {
+    const endpoint = `/apply/${JSON.parse(localStorage.getItem("user")).id}`;
+    try {
+      await api.patch(endpoint,project);
+      window.location.reload();
+    } catch (err) {
+      setError(err.response?.data?.error || "Something went wrong");
+    }
+  };
+
   if (!project) return <div className="loadingSpinner"></div>;
 
-  var applied_students = null;
-  if ("applied_students" in project && project.applied_students) applied_students = project.applied_students.split(',');
-  var approved_students = null;
-  if ("approved_students" in project && project.approved_students) approved_students = project.approved_students.split(',');
-  var confirmed_students = null;
-  if ("confirmed_students" in project && project.confirmed_students) confirmed_students = project.confirmed_students.split(',');
+  function studentList(studentArray) {
+    if (studentArray)
+      return studentArray.map(student => {
+        if (student) 
+          return <li key={student.id}>
+                    <FaEye
+                      onClick={(e) => {
+                        navigate(`/user/${student.id}`);
+                      }}
+                      className="eye"
+                    /> {student.first_name} {student.last_name} ({student.ucid}) 
+                  </li>; 
+        else return <li key={project.id}></li>
+      })
+  }
 
   return (
     <>
@@ -181,11 +237,7 @@ export default function Project() {
             </th>
             <td>
               <ul>
-                {
-                  applied_students.map(student => {
-                    return <li key={student.id}>{student.first_name} {student.last_name}</li>
-                  })
-                }
+                {studentInfo[0] ? studentList(studentInfo[0]) : <li key='x'>Loading...</li>}
               </ul>
             </td>
           </tr>
@@ -196,11 +248,7 @@ export default function Project() {
             </th>
             <td>
               <ul>
-                {
-                  approved_students.map(student => {
-                    return <li key={student.id}>{student.first_name} {student.last_name}</li>
-                  })
-                }
+                {studentInfo[0] ? studentList(studentInfo[1]) : <li key='x'>Loading...</li>}
               </ul>
             </td>
           </tr>
@@ -211,16 +259,27 @@ export default function Project() {
             </th>
             <td>
               <ul>
-                {
-                  confirmed_students.map(student => {
-                    return <li key={student.id}>{student.first_name} {student.last_name}</li>
-                  })
-                }
+                {studentInfo[0] ? studentList(studentInfo[2]) : <li key='x'>Loading...</li>}
               </ul>
             </td>
           </tr>
 
         </tbody></table>
+
+        <div className="buttonArea">
+          <button type="button" onClick={() => handleApply()}>
+            {
+              studentInfo[0] && 
+              studentInfo[0][0] && 
+              "id" in studentInfo[0][0] && studentInfo[0].map(student => student.id).includes(JSON.parse(localStorage.getItem("user")).id) ? 
+                "Remove Project Application" 
+              :
+                "Apply To Project"
+            }
+          </button>
+          
+          {error && <p style={{ color: "red" }}>{error}</p>}
+        </div>
       </div>
     </>
   );

@@ -20,6 +20,7 @@
 }
   
 .user ul {
+    list-style-type: none;
     padding-inline-start: inherit;
     margin: 0;
 }
@@ -54,4 +55,16 @@
     padding: 0.5em;
     position: relative;
     bottom: 0.3em;
+}
+
+.user .eye {
+    color: #007bff;
+    font-size: 20px;
+    vertical-align:text-bottom;
+    margin-right: 0.2em;
+  }
+  
+.user .eye:hover {
+    color: #00529B;
+    cursor: pointer;
 }

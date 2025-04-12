@@ -1,12 +1,22 @@
 import { useEffect, useState } from "react";
-import Navbar from "./Navbar";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { FaEye } from "react-icons/fa";
+
+import Navbar from "./Navbar";
 import api from "../services/api";
+
 import "../styles/User.css";
 
 export default function User() {
-  const { id } = useParams(); // actually email
+  const { id } = useParams();
   const [user, setUser] = useState(null);
+
+  const [projectInfo, setProjectInfo] = useState([]);
+
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     api.get(`/user/${id}`).then(res => {
@@ -16,14 +26,50 @@ export default function User() {
     });
   }, [id]);
 
+  useEffect(() => {
+    api.get("/projects")
+      .then(res => {
+        if (user) {
+          var appliedProjects = [];
+          var approvedProjects = [];
+          var committedProject = [];
+
+          console.log(user)
+          if (user.applied_projects) user.applied_projects.replace(/\[|\]| /g,'').split(',').forEach(id => {
+            var students = res.data.filter(function(project){return `${project.id}` === id})[0];
+            appliedProjects = [...appliedProjects, students];
+          })
+          if (user.approved_projects) user.approved_projects.replace(/\[|\]| /g,'').split(',').forEach(id => {
+            var students = res.data.filter(function(project){return `${project.id}` === id})[0];
+            approvedProjects = [...approvedProjects, students];
+          })
+          if (user.committed_project) user.committed_project.replace(/\[|\]| /g,'').split(',').forEach(id => {
+            var students = res.data.filter(function(project){return `${project.id}` === id})[0];
+            committedProject = [...committedProject, students];
+          })
+          
+          setProjectInfo([appliedProjects, approvedProjects, committedProject]);
+        }
+      }).catch(err => {setError(`Error loading student projects data: ${err}`)});
+  }, [user]);
+
   if (!user) return <div className="loadingSpinner"></div>;
 
-  var applied_projects = null;
-  if ("applied_projects" in user && user.applied_projects) applied_projects = user.applied_projects.split(',');
-  var approved_projects = null;
-  if ("approved_projects" in user && user.approved_projects) approved_projects = user.approved_projects.split(',');
-  var committed_project = null;
-  if ("committed_project" in user && user.committed_project) committed_project = user.committed_project;
+  function projectList(projectArray) {
+    if (projectArray)
+      return projectArray.map(project => {
+        if (project) 
+        return <li key={project.id}>
+                  <FaEye
+                    onClick={(e) => {
+                      navigate(`/project/${project.id}`);
+                    }}
+                    className="eye"
+                  /> {project.project_name}
+                </li>; 
+      else return <li key={project.id}></li>
+    })
+  }
 
   return (
     <>
@@ -197,11 +243,7 @@ export default function User() {
               </th>
               <td>
                 <ul>
-                  {
-                    applied_projects && applied_projects.map(project => {
-                      return <li key={project.id}>{project.project_name}</li>
-                    })
-                  }
+                  {projectInfo[0] ? projectList(projectInfo[0]) : <li key='x'>Loading...</li>}
                 </ul>
               </td>
             </tr>
@@ -212,11 +254,7 @@ export default function User() {
               </th>
               <td>
                 <ul>
-                  {
-                    approved_projects && approved_projects.map(project => {
-                      return <li key={project.id}>{project.project_name}</li>
-                    })
-                  }
+                  {projectInfo[0] ? projectList(projectInfo[1]) : <li key='x'>Loading...</li>}
                 </ul>
               </td>
             </tr>
@@ -226,11 +264,15 @@ export default function User() {
                 Project Committed To:
               </th>
               <td>
-                {committed_project && committed_project}
+                <ul>
+                  {projectInfo[0] ? projectList(projectInfo[2]) : <li key='x'>Loading...</li>}
+                </ul>
               </td>
             </tr>
 
           </tbody></table>
+          
+          {error && <p style={{ color: "red" }}>{error}</p>}
         </>}
 
       </div>

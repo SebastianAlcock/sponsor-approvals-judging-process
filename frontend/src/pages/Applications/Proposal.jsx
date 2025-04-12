@@ -10,7 +10,6 @@ export default function Proposal() {
   // Right now files are not required but they should be eventually
 
   const [formData, setFormData] = useState({
-    id: 0,
     approved: 0,
 
     year: new Date().getFullYear() + 1,
@@ -48,6 +47,8 @@ export default function Proposal() {
     approved_students:  "",
     confirmed_students: ""
   });
+
+  //JSON.parse(localStorage.getItem("user")).last_name;
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -91,7 +92,8 @@ export default function Proposal() {
       await api.post("/createproject", formData);  // <== call backend using api instance
       setSuccess("Project Proposal Submitted! Redirecting to home...");
       setError("");
-      setTimeout(() => navigate("/"), 2000);
+      setTimeout(() => navigate("/"), 2000); 
+
     } catch (err) {
       setError(err.response?.data?.error || "Something went wrong");
       setSuccess("");
@@ -244,7 +246,7 @@ export default function Proposal() {
           <div className="area">
             <span className="areaChild">
               <input id="check0a" name="emp_0" value="I am only interested in your team-based project course services" type="checkbox" onChange={handleChange} />
-              <label className="areaLabel" htmlFor="check0">I am only interested in your team-based project course services</label>
+              <label className="areaLabel" htmlFor="check0a">I am only interested in your team-based project course services</label>
             </span>
             <span className="areaChild">
               <input id="check1a" name="emp_1" value="I have part-time job opportunities now" type="checkbox" onChange={handleChange} />
