@@ -327,7 +327,7 @@ def create_project():
         project_skillset = data['project_skillset']
         project_instructions = data['project_instructions']
         # THIS SHOULD BE: project_benefits
-        employment_benefits = data['project_benefits']
+        project_benefits = data['project_benefits']
         #project_document = request.files['project_document'].read() 
         other_projects = data['other_projects']
 
@@ -363,7 +363,7 @@ def create_project():
             open_house=open_house,
             employment_history=employment_history,
             employment_opportunities=employment_opportunities,
-            employment_benefits=employment_benefits,
+            project_benefits=project_benefits,
             committed=committed,
             other_projects=other_projects,
             applied_students=applied_students,
