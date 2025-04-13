@@ -473,7 +473,7 @@ def approve_student(project_id, student_id):
         else:
             approved_students = []
 
-        approved_students.append(student.email)  
+        approved_students.append(student_id)  
         project.approved_students = json.dumps(approved_students)  
 
         project.approved = "1"
@@ -514,7 +514,7 @@ def commit_to_project(user_id):
         else:
             committed_students = []
 
-        committed_students.append(user.email)
+        committed_students.append(user_id)
         project.confirmed_students = json.dumps(committed_students)
 
         session.commit()
