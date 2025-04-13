@@ -57,6 +57,8 @@ export default function Project() {
   const handleApply = async (e) => {
     const endpoint = `/apply/${JSON.parse(localStorage.getItem("user")).id}`;
     try {
+      console.log(endpoint);
+      console.log(project.id);
       await api.patch(endpoint,project);
       window.location.reload();
     } catch (err) {

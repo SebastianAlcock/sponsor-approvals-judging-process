@@ -397,6 +397,7 @@ def apply_to_project(user_id):
     session = Session()
 
     try:
+        print("This prints!")
         user = session.query(User).filter_by(id=user_id).first()
         
         if not user:
