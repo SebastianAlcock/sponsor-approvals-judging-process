@@ -1,15 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Navbar";
+import api from "../../services/api";
 import "../../styles/Form.css";
 
 export default function Approval() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
 
+  const [projects, setProjects] = useState([]);
+  const [users, setUsers] = useState([]);
   const [selectedOrg, setSelectedOrg] = useState("");
   const [selectedProject, setSelectedProject] = useState("");
   const [availableStudents, setAvailableStudents] = useState([]);
+
   const [formData, setFormData] = useState({
     user_email: "",
     sponsor_org: "",
@@ -18,27 +22,10 @@ export default function Approval() {
     submitter_email: user?.email || "",
   });
 
-  // Mock: Sponsor org → projects
-  const sponsorProjects = {
-    "Org A": ["Project A1", "Project A2"],
-    "Org B": ["Project B1", "Project B2", "Project B3"],
-    "Org C": ["Project C1"]
-  };
-
-  // Mock: Project title → applied students
-  const dummyStudents = {
-    "Project A1": [
-      { first_name: "Alice", last_name: "Johnson", email: "alice@njit.edu" },
-      { first_name: "Bob", last_name: "Smith", email: "bob@njit.edu" }
-    ],
-    "Project B2": [
-      { first_name: "Charlie", last_name: "Lee", email: "charlie@njit.edu" }
-    ],
-    "Project C1": [
-      { first_name: "Diana", last_name: "Kim", email: "diana@njit.edu" },
-      { first_name: "Ethan", last_name: "Chen", email: "ethan@njit.edu" }
-    ]
-  };
+  useEffect(() => {
+    api.get("/projects").then(res => setProjects(res.data));
+    api.get("/users").then(res => setUsers(res.data));
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,18 +38,25 @@ export default function Approval() {
     } else if (name === "project_title") {
       setSelectedProject(value);
       setFormData(prev => ({ ...prev, project_title: value, user_email: "" }));
-      setAvailableStudents(dummyStudents[value] || []);
+
+      // Find the project
+      const project = projects.find(p => p.project_name === value);
+      const applied = JSON.parse(project?.applied_students || "[]");
+
+      const studentObjs = users.filter(u => applied.includes(u.id));
+      setAvailableStudents(studentObjs);
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Submitted Approval:", formData);
-    alert("✅ Approval submitted!");
-    navigate("/");
-  };
+  // Get all unique orgs from all projects
+  const allOrgs = [...new Set(projects.map(p => p.org_name).filter(Boolean))];
+
+  // Get all projects for the selected org
+  const projectsForOrg = projects
+    .filter(p => p.org_name === selectedOrg)
+    .map(p => p.project_name);
 
   return (
     <>
@@ -70,11 +64,17 @@ export default function Approval() {
       <div className="proposal page">
         <h1>Capstone Sponsor Approval Form</h1>
 
-        <form className="proposal form" onSubmit={handleSubmit}>
+        <form className="proposal form" onSubmit={(e) => {
+          e.preventDefault();
+          console.log("Submitted Approval:", formData);
+          alert("✅ Approval submitted!");
+          navigate("/");
+        }}>
+
           <label className="label">Sponsor Organization *</label>
           <select name="sponsor_org" onChange={handleChange} value={formData.sponsor_org} required>
             <option value="">-- Select Sponsor Org --</option>
-            {Object.keys(sponsorProjects).map(org => (
+            {allOrgs.map(org => (
               <option key={org} value={org}>{org}</option>
             ))}
           </select>
@@ -88,7 +88,7 @@ export default function Approval() {
             disabled={!selectedOrg}
           >
             <option value="">-- Select Project --</option>
-            {sponsorProjects[selectedOrg]?.map(title => (
+            {projectsForOrg.map(title => (
               <option key={title} value={title}>{title}</option>
             ))}
           </select>
