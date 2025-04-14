@@ -487,7 +487,72 @@ def approve_student(project_id, student_id):
 
     finally:
         session.close()
+        
+@app.route('/commit/<int:user_id>', methods=['PATCH'])
+def commit_to_project(user_id):
+    data = request.get_json()
+    session = Session()
 
+    try:
+        user = session.query(User).filter_by(id=user_id).first()
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        project_id = data.get("project_id")
+        project = session.query(Project).filter_by(id=project_id).first()
+        if not project:
+            return jsonify({"error": "Project not found"}), 404
+
+        # Load approved_students list and check if user is approved
+        approved_students = json.loads(project.approved_students or "[]")
+        if user_id not in approved_students:
+            return jsonify({"error": "User is not approved for this project"}), 403
+
+        # Load or initialize confirmed_students
+        confirmed_students = json.loads(project.confirmed_students or "[]")
+
+        # Prevent duplicate commits
+        if user_id in confirmed_students:
+            return jsonify({"message": "User already committed to this project"}), 200
+
+        # Commit the student
+        confirmed_students.append(user_id)
+        user.committed_project = str(project_id)  # store ID as string to match frontend expectations
+        project.confirmed_students = json.dumps(confirmed_students)
+
+        session.commit()
+
+        return jsonify({"message": "✅ User successfully committed to the project!"}), 200
+
+    except Exception as e:
+        session.rollback()
+        return jsonify({"error": str(e)}), 400
+
+    finally:
+        session.close()
+
+
+@app.route('/user/<int:id>', methods=['DELETE'])
+def delete_user(id):
+    session = Session()
+ 
+    try:
+         user = session.query(User).filter_by(id=id).first()
+ 
+         if not user:
+             return jsonify({"error": "User not found"}), 404
+ 
+         session.delete(user)
+         session.commit()
+ 
+         return jsonify({"message": "User deleted successfully!"}), 200
+ 
+    except Exception as e:
+         session.rollback()
+         return jsonify({"error": str(e)}), 400
+ 
+    finally:
+         session.close()
 
 @app.route('/user/<int:id>', methods=['PATCH'])
 def update_user(id):
@@ -596,7 +661,7 @@ def update_project(id):
     finally:
         session.close()
 
-@app.route('/delete-all-users', methods=['DELETE'])
+""" @app.route('/delete-all-users', methods=['DELETE'])
 def delete_all_users():
     session = Session()
 
@@ -610,7 +675,7 @@ def delete_all_users():
         return jsonify({"error": str(e)}), 400
 
     finally:
-        session.close()
+        session.close() """
 
 
 if __name__ == '__main__':
