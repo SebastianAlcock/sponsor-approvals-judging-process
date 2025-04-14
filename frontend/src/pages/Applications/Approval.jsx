@@ -11,20 +11,38 @@ export default function Approval() {
   const [projects, setProjects] = useState([]);
   const [users, setUsers] = useState([]);
   const [selectedOrg, setSelectedOrg] = useState("");
-  const [selectedProject, setSelectedProject] = useState("");
   const [availableStudents, setAvailableStudents] = useState([]);
 
   const [formData, setFormData] = useState({
     user_email: "",
     sponsor_org: "",
-    project_title: "",
+    project_id: "",
     submitter_name: `${user?.first_name || ""} ${user?.last_name || ""}`,
     submitter_email: user?.email || "",
   });
 
+  const fetchAllData = async () => {
+    try {
+      const [projectRes, userRes] = await Promise.all([
+        api.get("/projects"),
+        api.get("/users")
+      ]);
+      setProjects(projectRes.data);
+      setUsers(userRes.data);
+
+      const selectedProject = projectRes.data.find(p => p.id === Number(formData.project_id));
+      if (selectedProject) {
+        const appliedIds = JSON.parse(selectedProject.applied_students || "[]");
+        const matchingStudents = userRes.data.filter(u => appliedIds.includes(u.id));
+        setAvailableStudents(matchingStudents);
+      }
+    } catch (err) {
+      console.error("Failed to fetch initial data:", err);
+    }
+  };
+
   useEffect(() => {
-    api.get("/projects").then(res => setProjects(res.data));
-    api.get("/users").then(res => setUsers(res.data));
+    fetchAllData();
   }, []);
 
   const handleChange = (e) => {
@@ -32,31 +50,42 @@ export default function Approval() {
 
     if (name === "sponsor_org") {
       setSelectedOrg(value);
-      setFormData(prev => ({ ...prev, sponsor_org: value, project_title: "", user_email: "" }));
+      setFormData(prev => ({ ...prev, sponsor_org: value, project_id: "", user_email: "" }));
       setAvailableStudents([]);
-      setSelectedProject("");
-    } else if (name === "project_title") {
-      setSelectedProject(value);
-      setFormData(prev => ({ ...prev, project_title: value, user_email: "" }));
-
-      // Find the project
-      const project = projects.find(p => p.project_name === value);
-      const applied = JSON.parse(project?.applied_students || "[]");
-
-      const studentObjs = users.filter(u => applied.includes(u.id));
-      setAvailableStudents(studentObjs);
+    } else if (name === "project_id") {
+      setFormData(prev => ({ ...prev, project_id: value, user_email: "" }));
+      const selectedProject = projects.find(p => p.id === Number(value));
+      const appliedIds = JSON.parse(selectedProject?.applied_students || "[]");
+      const matchingStudents = users.filter(u => appliedIds.includes(u.id));
+      setAvailableStudents(matchingStudents);
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
 
-  // Get all unique orgs from all projects
   const allOrgs = [...new Set(projects.map(p => p.org_name).filter(Boolean))];
+  const projectsForOrg = projects.filter(p => p.org_name === selectedOrg);
 
-  // Get all projects for the selected org
-  const projectsForOrg = projects
-    .filter(p => p.org_name === selectedOrg)
-    .map(p => p.project_name);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const student = users.find(u => u.email === formData.user_email);
+    const project = projects.find(p => p.id === Number(formData.project_id));
+
+    if (!student || !project) {
+      alert("❌ Could not find the selected student or project.");
+      return;
+    }
+
+    try {
+      const res = await api.patch(`/approve/${project.id}/${student.id}`);
+      alert("✅ " + res.data.message);
+      await fetchAllData(); // Refresh data to update dropdown
+    } catch (err) {
+      console.error("Error approving student:", err);
+      alert("❌ Failed to approve student: " + (err.response?.data?.error || err.message));
+    }
+  };
 
   return (
     <>
@@ -64,13 +93,8 @@ export default function Approval() {
       <div className="proposal page">
         <h1>Capstone Sponsor Approval Form</h1>
 
-        <form className="proposal form" onSubmit={(e) => {
-          e.preventDefault();
-          console.log("Submitted Approval:", formData);
-          alert("✅ Approval submitted!");
-          navigate("/");
-        }}>
-
+        <form className="proposal form" onSubmit={handleSubmit}>
+          {/* Sponsor Org Dropdown */}
           <label className="label">Sponsor Organization *</label>
           <select name="sponsor_org" onChange={handleChange} value={formData.sponsor_org} required>
             <option value="">-- Select Sponsor Org --</option>
@@ -79,20 +103,22 @@ export default function Approval() {
             ))}
           </select>
 
+          {/* Project Dropdown */}
           <label className="label">Project Title *</label>
           <select
-            name="project_title"
+            name="project_id"
             onChange={handleChange}
-            value={formData.project_title}
+            value={formData.project_id}
             required
             disabled={!selectedOrg}
           >
             <option value="">-- Select Project --</option>
-            {projectsForOrg.map(title => (
-              <option key={title} value={title}>{title}</option>
+            {projectsForOrg.map(p => (
+              <option key={p.id} value={p.id}>{p.project_name}</option>
             ))}
           </select>
 
+          {/* Student Dropdown */}
           <label className="label">Student to Approve *</label>
           <select
             name="user_email"

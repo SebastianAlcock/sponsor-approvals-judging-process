@@ -397,7 +397,6 @@ def apply_to_project(user_id):
     session = Session()
 
     try:
-        print("This prints!")
         user = session.query(User).filter_by(id=user_id).first()
         
         if not user:
@@ -451,37 +450,36 @@ def approve_student(project_id, student_id):
 
     try:
         project = session.query(Project).filter_by(id=project_id).first()
-
         if not project:
             return jsonify({"error": "Project not found"}), 404
 
         student = session.query(User).filter_by(id=student_id).first()
-
         if not student:
             return jsonify({"error": "Student not found"}), 404
 
-        if student.approved_projects:
-            approved_projects = json.loads(student.approved_projects)
+        approved_projects = json.loads(student.approved_projects or "[]")
+        approved_students = json.loads(project.approved_students or "[]")
+
+        if project_id in approved_projects:
+            # If already approved, remove student
+            approved_projects.remove(project_id)
+            if student_id in approved_students:
+                approved_students.remove(student_id)
+            message = "Student unapproved from the project."
         else:
-            approved_projects = []
+            # If not approved, add student
+            approved_projects.append(project_id)
+            if student_id not in approved_students:
+                approved_students.append(student_id)
+            message = "Student approved for the project."
 
-        approved_projects.append(project.project_name)  
-        student.approved_projects = json.dumps(approved_projects)  
-
-        approved_students = project.approved_students
-        if approved_students:
-            approved_students = json.loads(approved_students)
-        else:
-            approved_students = []
-
-        approved_students.append(student_id)  
-        project.approved_students = json.dumps(approved_students)  
-
-        project.approved = "1"
+        # Save back to models
+        student.approved_projects = json.dumps(approved_projects)
+        project.approved_students = json.dumps(approved_students)
 
         session.commit()
 
-        return jsonify({"message": "Student successfully approved for the project!"}), 200
+        return jsonify({"message": f"✅ {message}"}), 200
 
     except Exception as e:
         session.rollback()
@@ -490,66 +488,6 @@ def approve_student(project_id, student_id):
     finally:
         session.close()
 
-@app.route('/commit/<int:user_id>', methods=['PATCH'])
-def commit_to_project(user_id):
-    data = request.get_json()
-    session = Session()
-
-    try:
-        user = session.query(User).filter_by(id=user_id).first()
-
-        if not user:
-            return jsonify({"error": "User not found"}), 404
-
-        project_name = data.get("project_name")
-        project = session.query(Project).filter_by(project_name=project_name).first()
-
-        if not project:
-            return jsonify({"error": "Project not found"}), 404
-
-        user.committed_project = project_name
-
-        committed_students = project.confirmed_students
-        if committed_students:
-            committed_students = json.loads(committed_students)
-        else:
-            committed_students = []
-
-        committed_students.append(user_id)
-        project.confirmed_students = json.dumps(committed_students)
-
-        session.commit()
-
-        return jsonify({"message": "User successfully committed to the project!"}), 200
-
-    except Exception as e:
-        session.rollback()
-        return jsonify({"error": str(e)}), 400
-
-    finally:
-        session.close()
-
-@app.route('/user/<int:id>', methods=['DELETE'])
-def delete_user(id):
-    session = Session()
-
-    try:
-        user = session.query(User).filter_by(id=id).first()
-
-        if not user:
-            return jsonify({"error": "User not found"}), 404
-
-        session.delete(user)
-        session.commit()
-
-        return jsonify({"message": "User deleted successfully!"}), 200
-
-    except Exception as e:
-        session.rollback()
-        return jsonify({"error": str(e)}), 400
-
-    finally:
-        session.close()
 
 @app.route('/user/<int:id>', methods=['PATCH'])
 def update_user(id):
@@ -658,6 +596,21 @@ def update_project(id):
     finally:
         session.close()
 
+@app.route('/delete-all-users', methods=['DELETE'])
+def delete_all_users():
+    session = Session()
+
+    try:
+        session.query(User).delete()
+        session.commit()
+        return jsonify({"message": "All users deleted successfully!"}), 200
+
+    except Exception as e:
+        session.rollback()
+        return jsonify({"error": str(e)}), 400
+
+    finally:
+        session.close()
 
 
 if __name__ == '__main__':

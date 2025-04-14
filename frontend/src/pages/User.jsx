@@ -34,19 +34,30 @@ export default function User() {
           var approvedProjects = [];
           var committedProject = [];
 
-          console.log(user)
-          if (user.applied_projects) user.applied_projects.replace(/\[|\]| /g,'').split(',').forEach(id => {
-            var students = res.data.filter(function(project){return `${project.id}` === id})[0];
-            appliedProjects = [...appliedProjects, students];
-          })
-          if (user.approved_projects) user.approved_projects.replace(/\[|\]| /g,'').split(',').forEach(id => {
-            var students = res.data.filter(function(project){return `${project.id}` === id})[0];
-            approvedProjects = [...approvedProjects, students];
-          })
-          if (user.committed_project) user.committed_project.replace(/\[|\]| /g,'').split(',').forEach(id => {
-            var students = res.data.filter(function(project){return `${project.id}` === id})[0];
-            committedProject = [...committedProject, students];
-          })
+          if (user.applied_projects)
+            user.applied_projects.replace(/\[|\]| /g, '')
+              .split(',').filter(Boolean).map(Number)
+              .forEach(id => {
+                const match = res.data.find(project => project.id === id);
+                appliedProjects.push(match);
+              });
+          
+          if (user.approved_projects)
+            user.approved_projects.replace(/\[|\]| /g, '')
+              .split(',').filter(Boolean).map(Number)
+              .forEach(id => {
+                const match = res.data.find(project => project.id === id);
+                approvedProjects.push(match);
+              });
+          
+          if (user.committed_project)
+            user.committed_project.replace(/\[|\]| /g, '')
+              .split(',').filter(Boolean).map(Number)
+              .forEach(id => {
+                const match = res.data.find(project => project.id === id);
+                committedProject.push(match);
+              });
+          
           
           setProjectInfo([appliedProjects, approvedProjects, committedProject]);
         }
@@ -56,20 +67,22 @@ export default function User() {
   if (!user) return <div className="loadingSpinner"></div>;
 
   function projectList(projectArray) {
-    if (projectArray)
-      return projectArray.map(project => {
-        if (project) 
-        return <li key={project.id}>
-                  <FaEye
-                    onClick={(e) => {
-                      navigate(`/project/${project.id}`);
-                    }}
-                    className="eye"
-                  /> {project.project_name}
-                </li>; 
-      else return <li key={project.id}></li>
-    })
-  }
+    if (!Array.isArray(projectArray)) return null;
+
+    return projectArray.map((project, i) => {
+    if (!project) return <li key={`missing-${i}`}>(Project not found)</li>;
+
+    return (
+      <li key={project.id}>
+        <FaEye
+          onClick={() => navigate(`/project/${project.id}`)}
+          className="eye"
+        />{" "}
+        {project.project_name}
+      </li>
+    );
+  });
+}
 
   return (
     <>
