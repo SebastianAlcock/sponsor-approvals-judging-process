@@ -38,6 +38,7 @@ export default function Project() {
   }, [id]);
 
   useEffect(() => {
+    if (userId)
     api.get(`/user/${userId}`).then(res => {
       setUser(res.data);
       //console.log(res.data)
@@ -296,6 +297,7 @@ export default function Project() {
 
         <div className="buttonArea">
           { // if user is student
+            userLocal &&
             userRole && 
             userRole.includes('student') ?
             <>
