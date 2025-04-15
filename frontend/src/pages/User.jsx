@@ -82,7 +82,9 @@ export default function User() {
       </li>
     );
   });
-}
+  }
+
+  console.log(user)
 
   return (
     <>

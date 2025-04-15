@@ -12,12 +12,21 @@ import Navbar from "./Navbar";
 export default function Project() {
   const { id } = useParams();
   const [project, setProject] = useState(null);
+  const [user, setUser] = useState(null);
 
-  const [studentInfo, setStudentInfo] = useState([]);
+  const [studentInfo, setStudentInfo] = useState([[],[],[]]);
 
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+
+  const userLocal = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
+
+  const userId = userLocal && 'id' in userLocal ? userLocal.id : null;
+
+  const userRole = userLocal && 'roles' in userLocal ? userLocal.roles : null;
+
+  console.log(userLocal)
 
   useEffect(() => {
     api.get(`/project/${id}`).then(res => {
@@ -27,6 +36,15 @@ export default function Project() {
       console.error("Error fetching project:", err);
     });
   }, [id]);
+
+  useEffect(() => {
+    api.get(`/user/${userId}`).then(res => {
+      setUser(res.data);
+      //console.log(res.data)
+    }).catch(err => {
+      console.error("Error fetching user:", err);
+    });
+  }, [userId]);
 
   useEffect(() => {
     api.get("/users")
@@ -55,10 +73,18 @@ export default function Project() {
   }, [project]);
 
   const handleApply = async (e) => {
-    const endpoint = `/apply/${JSON.parse(localStorage.getItem("user")).id}`;
+    const endpoint = `/apply/${userId}`;
     try {
-      console.log(endpoint);
-      console.log(project.id);
+      await api.patch(endpoint,project);
+      window.location.reload();
+    } catch (err) {
+      setError(err.response?.data?.error || "Something went wrong");
+    }
+  };
+
+  const handleCommit = async (e) => {
+    const endpoint = `/commit/${userId}`;
+    try {
       await api.patch(endpoint,project);
       window.location.reload();
     } catch (err) {
@@ -257,7 +283,7 @@ export default function Project() {
           
           <tr>
             <th>
-              Confirmed Students:
+              Committed Students:
             </th>
             <td>
               <ul>
@@ -269,16 +295,56 @@ export default function Project() {
         </tbody></table>
 
         <div className="buttonArea">
-          <button type="button" onClick={() => handleApply()}>
-            {
-              studentInfo[0] && 
-              studentInfo[0][0] && 
-              "id" in studentInfo[0][0] && studentInfo[0].map(student => student.id).includes(JSON.parse(localStorage.getItem("user")).id) ? 
-                "Remove Project Application" 
-              :
-                "Apply To Project"
-            }
-          </button>
+          { // if user is student
+            userRole && 
+            userRole.includes('student') ?
+            <>
+              { // if user is approved for project
+                studentInfo[1][0] &&
+                'id' in studentInfo[1][0] &&
+                studentInfo[1].map(student => student.id).includes(userId) ?
+                <>
+                  { /*
+                    three cases:
+                    if user committed to any project
+                    then
+                      user committed to the project
+                      - show remove commit button
+                      user not committed to the project
+                      - don't show commit button
+                    if user not committed to any project
+                    then
+                      - show commit button
+                    */
+                    user && user.committed_project ?
+                    <> 
+                      { // if user is committed to the project
+                        user.committed_project.includes(project.id) ?
+                      <button type="button" onClick={() => handleCommit()}>Remove Project Commitment</button>
+                      :
+                      <></>
+                      } 
+                    </>
+                    :
+                    <button type="button" onClick={() => handleCommit()}>Commit To Project</button>
+                  }
+                </>
+                :
+                <button type="button" onClick={() => handleApply()}>
+                { // if user is applied to project
+                  studentInfo[0][0] &&
+                  'id' in studentInfo[0][0] &&
+                  studentInfo[0].map(student => student.id).includes(userId) ? 
+                    "Remove Project Application" 
+                  :
+                    "Apply To Project"
+                }
+                </button>
+              }
+            </>
+            :
+            <></>
+          }
           
           {error && <p style={{ color: "red" }}>{error}</p>}
         </div>
