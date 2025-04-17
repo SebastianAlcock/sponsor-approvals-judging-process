@@ -498,7 +498,7 @@ def commit_to_project(user_id):
         if not user:
             return jsonify({"error": "User not found"}), 404
 
-        project_id = data.get("project_id")
+        project_id = data.get("id")
         project = session.query(Project).filter_by(id=project_id).first()
         if not project:
             return jsonify({"error": "Project not found"}), 404
@@ -513,11 +513,14 @@ def commit_to_project(user_id):
 
         # Prevent duplicate commits
         if user_id in confirmed_students:
-            return jsonify({"message": "User already committed to this project"}), 200
-
-        # Commit the student
-        confirmed_students.append(user_id)
-        user.committed_project = str(project_id)  # store ID as string to match frontend expectations
+            user.committed_project = ''
+            confirmed_students.remove(user_id)
+            #return jsonify({"message": "User already committed to this project"}), 200
+        else:
+            # Commit the student
+            user.committed_project = str(project_id)  # store ID as string to match frontend expectations
+            confirmed_students.append(user_id)
+        
         project.confirmed_students = json.dumps(confirmed_students)
 
         session.commit()
