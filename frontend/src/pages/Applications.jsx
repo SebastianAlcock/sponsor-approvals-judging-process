@@ -3,6 +3,9 @@ import Navbar from "./Navbar";
 import "../styles/Application.css";
 
 export default function Applications() {
+  const userLocal = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
+  const userRole = userLocal && 'roles' in userLocal ? userLocal.roles : null;
+
   return (
     <>
       <Navbar currentPage="applications" />
@@ -12,14 +15,17 @@ export default function Applications() {
         <h4>Please select one of the following available application options:</h4>
 
         <div className="app-links">
+          { userLocal && userRole && (userRole.includes('sponsor') || userRole.includes('admin')) ?
           <Link to="/applications/proposal" className="app-button">
             📄 Sponsor Proposal Application
-          </Link>
+          </Link> : <></> }
 
+          { userLocal && userRole && (userRole.includes('sponsor') || userRole.includes('admin')) ?
           <Link to="/applications/approval" className="app-button">
             ✅ Sponsor Approval Form
-          </Link>
+          </Link> : <></> }
         </div>
+
       </div>
     </>
   );

@@ -26,8 +26,6 @@ export default function Project() {
 
   const userRole = userLocal && 'roles' in userLocal ? userLocal.roles : null;
 
-  console.log(userLocal)
-
   useEffect(() => {
     api.get(`/project/${id}`).then(res => {
       setProject(res.data);
@@ -94,6 +92,25 @@ export default function Project() {
   };
 
   if (!project) return <div className="loadingSpinner"></div>;
+
+  const handleDelete = async (e) => {
+    const endpoint = `/project/${project.id}`;
+    try {
+      await api.delete(endpoint);
+      navigate(`/directory`);
+    } catch (err) {
+      setError(err.response?.data?.error || "Something went wrong");
+    }
+  };
+
+  // TODO: IMPLEMENT PROJECT EDITING
+  const handleEdit = async (e) => {
+    try {
+      window.location.reload();
+    } catch (err) {
+      setError(err.response?.data?.error || "Something went wrong");
+    }
+  };
 
   function studentList(studentArray) {
     if (studentArray)
@@ -343,6 +360,18 @@ export default function Project() {
                 }
                 </button>
               }
+            </>
+            :
+            <></>
+          }
+
+          { // if user is admin
+            userLocal &&
+            userRole && 
+            userRole.includes('admin') ?
+            <>
+              <button type="button" onClick={() => handleEdit()}>Edit Project</button>
+              <button type="button" onClick={() => handleDelete()}>Delete Project</button>
             </>
             :
             <></>

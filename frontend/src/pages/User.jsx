@@ -18,6 +18,12 @@ export default function User() {
 
   const navigate = useNavigate();
 
+  const userLocal = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
+
+  const userId = userLocal && 'id' in userLocal ? userLocal.id : null;
+
+  const userRole = userLocal && 'roles' in userLocal ? userLocal.roles : null;
+
   useEffect(() => {
     api.get(`/user/${id}`).then(res => {
       setUser(res.data);
@@ -65,6 +71,25 @@ export default function User() {
   }, [user]);
 
   if (!user) return <div className="loadingSpinner"></div>;
+
+  const handleDelete = async (e) => {
+    const endpoint = `/user/${user.id}`;
+    try {
+      await api.delete(endpoint);
+      navigate(`/directory`);
+    } catch (err) {
+      setError(err.response?.data?.error || "Something went wrong");
+    }
+  };
+
+  // TODO: IMPLEMENT USER EDITING
+  const handleEdit = async (e) => {
+    try {
+      window.location.reload();
+    } catch (err) {
+      setError(err.response?.data?.error || "Something went wrong");
+    }
+  };
 
   function projectList(projectArray) {
     if (!Array.isArray(projectArray)) return null;
@@ -287,8 +312,30 @@ export default function User() {
 
           </tbody></table>
           
-          {error && <p style={{ color: "red" }}>{error}</p>}
         </>}
+
+        <div className="buttonArea">
+
+          { // if user is admin or owns the page show controls
+            userLocal &&
+            userRole && 
+            userId &&
+            (userRole.includes('admin') || user.id === userId) ?
+            <>
+              <button type="button" onClick={() => handleEdit()}>Edit User</button>
+              { // if user is admin show delete
+                userRole.includes('admin') ?
+                <button type="button" onClick={() => handleDelete()}>Delete User</button>
+                :
+                <></>
+              }
+            </>
+            :
+            <></>
+          }
+          
+          {error && <p style={{ color: "red" }}>{error}</p>}
+        </div>
 
       </div>
     </>

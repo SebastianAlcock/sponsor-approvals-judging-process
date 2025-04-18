@@ -5,7 +5,6 @@ import Navbar from "./Navbar";
 import "../styles/Signup.css";
 
 export default function Signup() {
-  const [role, setRole] = useState("");
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -13,6 +12,7 @@ export default function Signup() {
     email: "",
     phone: "",
     password: "",
+    roles: "",
     confirm_password: "",
     major: "",
     minor: "",
@@ -30,7 +30,12 @@ export default function Signup() {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (e.target.name === 'rolesAdmin' && e.target.value !== "" && formData.roles !== "")
+      setFormData({ ...formData, "roles": `${formData.roles},${e.target.value}` });
+    else if (e.target.name === 'rolesAdmin' && e.target.value === "" && formData.roles !== "")
+      setFormData({ ...formData, "roles": `${formData.roles.split(",")[0]}` });
+    else
+      setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
@@ -42,7 +47,7 @@ export default function Signup() {
       return;
     }
 
-    const endpoint = role === "student" ? "/register-student" : "/register-sponsor";
+    const endpoint = "/register";
 
     try {
       await api.post(endpoint, { ...formData });
@@ -62,12 +67,12 @@ export default function Signup() {
       <div className="signup page">
         <h2>Sign Up</h2>
 
-        {!role ? (
+        {!formData.roles ? (
           <div className="role-select-container">
             <h4>Please select your role to begin:</h4>
             <div className="role-buttons">
-              <button onClick={() => setRole("student")}>🎓 I'm a Student</button>
-              <button onClick={() => setRole("sponsor")}>🏢 I'm a Sponsor</button>
+              <button name="roles" value="student" onClick={handleChange}>🎓 I'm a Student</button>
+              <button name="roles" value="sponsor" onClick={handleChange}>🏢 I'm a Sponsor</button>
             </div>
           </div>
         ) : (
@@ -80,7 +85,7 @@ export default function Signup() {
               <input name="password" type="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
               <input name="confirm_password" type="password" placeholder="Confirm Password" value={formData.confirm_password} onChange={handleChange} required />
 
-              {role === "student" && (
+              {formData.roles.includes("student") && (
                 <>
                   <h3>Student Specific Information:</h3>
                   <input name="ucid" placeholder="UCID" value={formData.ucid} onChange={handleChange} required />
@@ -90,7 +95,7 @@ export default function Signup() {
                 </>
               )}
 
-              {role === "sponsor" && (
+              {formData.roles.includes("sponsor") && (
                 <>
                   <h3>Sponsor Specific Information:</h3>
                   <input name="position_title" placeholder="Position Title" value={formData.position_title} onChange={handleChange} required />
@@ -131,9 +136,15 @@ export default function Signup() {
                 </>
               )}
 
+              <label className="label">Set Admin:</label>
+              <select name="rolesAdmin" onChange={handleChange} required >
+                <option value="" defaultValue>No</option>
+                <option value="admin">Yes</option>
+              </select>
+
               <div className="buttonArea">
                 <button type="submit">Register</button>
-                <button type="button" onClick={() => setRole("")} className="secondary">Back to Role Select</button>
+                <button type="button" name="roles" value="" onClick={handleChange} className="secondary">Back to Role Select</button>
               </div>
 
               {success && <p style={{ color: "green" }}>{success}</p>}

@@ -131,7 +131,7 @@ export default function Directory() {
     }
   };
 
-  const filteredUsers = (role) => users.filter(user => user.roles === role);
+  const filteredUsers = (role) => users.filter(user => user.roles.includes(role));
 
   return (
     <>
@@ -159,7 +159,8 @@ export default function Directory() {
               }
               rows={
                 activeTab === "projects"
-                  ? projects
+                // PROJECT SHOWS CURRENTLY UNAPPROVED PROJECTS - CHANGE TO 1 IF ONLY APPROVED
+                  ? projects.filter(project => project.approved === "0")//.filter(/* TODO: IMPLEMENT PROJECT ONLY DISPLAYING IN FUTURE */)
                   : activeTab === "students"
                   ? filteredUsers("student")
                   : filteredUsers("sponsor")
