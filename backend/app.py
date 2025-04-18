@@ -12,6 +12,44 @@ CORS(app)
 def home():
     return jsonify({"message": "Flask Backend is Running!"})
 
+@app.route('/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    session = Session()
+
+    try:
+        hashed_password = generate_password_hash(data['password'], method='pbkdf2:sha256')
+        new_user = User(
+            first_name=data['first_name'],
+            last_name=data['last_name'],
+            email=data['email'],
+            phone=data['phone'],
+
+            password=hashed_password,
+
+            ucid=data['ucid'],
+            roles=data['roles'],
+            major=data['major'],
+            minor=data['minor'],
+            specialization=data['specialization'],
+
+
+            position_title=data.get('position_title'),
+            org_name=data.get('org_name'),
+            org_category=data.get('org_category'),
+            org_industry=data.get('org_industry'),
+            org_website=data.get('org_website'),
+            org_address=data.get('org_address'),
+        )
+        session.add(new_user)
+        session.commit()
+        return jsonify({"message": "New user registered successfully!"}), 201
+    except Exception as e:
+        session.rollback()
+        return jsonify({"error": str(e)}), 400
+    finally:
+        session.close()
+
 @app.route('/register-student', methods=['POST'])
 def register_student():
     data = request.get_json()
@@ -402,16 +440,15 @@ def apply_to_project(user_id):
         if not user:
             return jsonify({"error": "User not found"}), 404
         
+        applied_projects = user.applied_projects
+        
         project_id = data.get("id")
         project = session.query(Project).filter_by(id=project_id).first()
 
         if not project:
             return jsonify({"error": "Project not found"}), 404
 
-        applied_projects = user.applied_projects
-        print(applied_projects)
         applied_students = project.applied_students
-        print(applied_students)
 
         if applied_projects:
             applied_projects = json.loads(applied_projects)
@@ -422,6 +459,9 @@ def apply_to_project(user_id):
             applied_students = json.loads(applied_students)
         else:
             applied_students = []
+        
+        if len(applied_projects) >= 3:
+            return jsonify({"error": "User not allowed to apply to more than 3 projects!"}), 400
 
         if user.id not in applied_students:
             applied_students.append(user.id)
@@ -540,15 +580,51 @@ def delete_user(id):
     session = Session()
  
     try:
-         user = session.query(User).filter_by(id=id).first()
- 
-         if not user:
-             return jsonify({"error": "User not found"}), 404
- 
-         session.delete(user)
-         session.commit()
- 
-         return jsonify({"message": "User deleted successfully!"}), 200
+        user = session.query(User).filter_by(id=id).first()
+
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+        
+        if user.applied_projects:
+            for project_id in json.loads(user.applied_projects or "[]"):
+                project = session.query(Project).filter_by(id=project_id).first()
+                if not project:
+                    return jsonify({"error": "Project does not have applied user, cannot remove"}), 404
+                
+                applied_students = json.loads(project.applied_students)
+                
+                applied_students.remove(user.id)
+
+                project.applied_students = json.dumps(applied_students)
+
+        if user.approved_projects:
+            for project_id in json.loads(user.applied_projects or "[]"):
+                project = session.query(Project).filter_by(id=project_id).first()
+                if not project:
+                    return jsonify({"error": "Project does not have approved user, cannot remove"}), 404
+                
+                approved_students = json.loads(project.approved_students)
+                
+                approved_students.remove(user.id)
+
+                project.approved_students = json.dumps(approved_students)
+
+        if user.committed_project:
+            for user_id in json.loads(project.confirmed_students or "[]"):
+                project = session.query(Project).filter_by(id=project_id).first()
+                if not project:
+                    return jsonify({"error": "Project does not have committed user, cannot remove"}), 404
+                
+                confirmed_students = json.loads(project.confirmed_students)
+                
+                confirmed_students.remove(user.id)
+
+                project.confirmed_students = json.dumps(confirmed_students)
+            
+        session.delete(user)
+        session.commit()
+
+        return jsonify({"message": "User deleted successfully!"}), 200
  
     except Exception as e:
          session.rollback()
@@ -598,7 +674,36 @@ def delete_project(id):
 
         if not project:
             return jsonify({"error": "Project not found"}), 404
+        
+        for user_id in json.loads(project.applied_students or "[]"):
+            user = session.query(User).filter_by(id=user_id).first()
+            if not user:
+                return jsonify({"error": "User not applied for project, cannot remove"}), 404
+            
+            applied_projects = json.loads(user.applied_projects)
+            
+            applied_projects.remove(project.id)
 
+            user.applied_projects = json.dumps(applied_projects)
+
+        for user_id in json.loads(project.approved_students or "[]"):
+            user = session.query(User).filter_by(id=user_id).first()
+            if not user:
+                return jsonify({"error": "User not approved for project, cannot remove"}), 404
+            
+            approved_projects = json.loads(user.approved_projects)
+            
+            approved_projects.remove(project.id)
+
+            user.approved_projects = json.dumps(approved_projects)
+
+        for user_id in json.loads(project.confirmed_students or "[]"):
+            user = session.query(User).filter_by(id=user_id).first()
+            if not user:
+                return jsonify({"error": "User not committed to project, cannot remove"}), 404
+            
+            user.committed_project = ''
+            
         session.delete(project)
         session.commit()
 
