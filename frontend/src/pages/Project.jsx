@@ -105,11 +105,7 @@ export default function Project() {
 
   // TODO: IMPLEMENT PROJECT EDITING
   const handleEdit = async (e) => {
-    try {
-      window.location.reload();
-    } catch (err) {
-      setError(err.response?.data?.error || "Something went wrong");
-    }
+    navigate(`/edit-project/${project.id}`);
   };
 
   function studentList(studentArray) {

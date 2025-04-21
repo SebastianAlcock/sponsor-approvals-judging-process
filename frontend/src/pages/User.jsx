@@ -84,11 +84,7 @@ export default function User() {
 
   // TODO: IMPLEMENT USER EDITING
   const handleEdit = async (e) => {
-    try {
-      window.location.reload();
-    } catch (err) {
-      setError(err.response?.data?.error || "Something went wrong");
-    }
+    navigate(`/edit-user/${user.id}`);
   };
 
   function projectList(projectArray) {

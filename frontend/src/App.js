@@ -9,7 +9,8 @@ import User from "./pages/User";
 import Project from "./pages/Project";
 import TestGrid from './TestGrid';
 import Approval from "./pages/Applications/Approval";
-
+import EditProject from "./pages/EditProject";
+import EditUser from "./pages/EditUser";
 import './styles/App.css';
 
 function App() {
@@ -27,6 +28,8 @@ function App() {
           <Route path="/project/:id" element={<Project />} />
           <Route path="/test" element={<TestGrid />} />
           <Route path="/applications/approval" element={<Approval />} />
+          <Route path="/edit-project/:id" element={<EditProject />} />
+          <Route path="/edit-user/:id" element={<EditUser />} />
         </Routes>
       </div>
     </Router>
