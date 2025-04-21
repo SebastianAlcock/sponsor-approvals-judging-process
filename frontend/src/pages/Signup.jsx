@@ -136,11 +136,11 @@ export default function Signup() {
                 </>
               )}
 
-              <label className="label">Set Admin:</label>
-              <select name="rolesAdmin" onChange={handleChange} required >
-                <option value="" defaultValue>No</option>
-                <option value="admin">Yes</option>
-              </select>
+                <label className="label">Set Admin:</label>
+                <select name="rolesAdmin" onChange={handleChange}>
+                  <option value="">No</option>   
+                  <option value="admin">Yes</option>
+                </select>
 
               <div className="buttonArea">
                 <button type="submit">Register</button>

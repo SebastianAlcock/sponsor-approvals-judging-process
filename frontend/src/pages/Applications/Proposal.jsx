@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api"; // <== use your axios instance here
 
@@ -53,6 +53,16 @@ export default function Proposal() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  // 🔒 Protect this route
+  useEffect(() => {
+    if (!user || (!user.roles.includes('sponsor') && !user.roles.includes('admin'))) {
+      navigate('/');
+    }
+  }, [user, navigate]);
+
 
   const handleChange = (e) => {
     if (e.target.name.includes("emp_")) {

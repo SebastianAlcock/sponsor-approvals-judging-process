@@ -8,6 +8,12 @@ export default function Approval() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
 
+  useEffect(() => {
+    if (!user || (!user.roles.includes('sponsor') && !user.roles.includes('admin'))) {
+      navigate('/');
+    }
+  }, [user, navigate]);
+
   const [projects, setProjects] = useState([]);
   const [users, setUsers] = useState([]);
   const [selectedOrg, setSelectedOrg] = useState("");
