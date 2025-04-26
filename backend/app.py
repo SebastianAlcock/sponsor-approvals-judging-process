@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from db import Session
-from models import User, Project, TrackRequest
+from models import User, Project, TrackRequest, Approval
 import json
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -425,9 +425,6 @@ def create_project():
     finally:
         session.close()
 
-if __name__ == '__main__':
-    app.run(debug=True)
-
 
 @app.route('/apply/<int:user_id>', methods=['PATCH'])
 def apply_to_project(user_id):
@@ -768,6 +765,76 @@ def update_project(id):
 
     finally:
         session.close()
+'''
+@app.route('/approvals', methods=['GET'])
+def get_all_approvals():
+    session = Session()
+    try:
+        approvals = session.query(Approval).all()
+        approval_data = [{
+            "id": approval.id,
+            "project_id": approval.project_id,
+            "user_id": approval.user_id,
+            "submitter_id": approval.submitter_id
+        } for approval in approvals]
+
+        return jsonify(approval_data), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        session.close()
+'''
+
+@app.route('/approvals', methods=['GET'])
+def get_all_approvals():
+    session = Session()
+    try:
+        approvals = session.query(Approval).all()
+
+        approval_data = [{
+            "id": approval.id,
+            "project_id": approval.project_id,
+            "user_id": approval.user_id,
+            "submitter_id": approval.submitter_id
+        } for approval in approvals]
+
+        return jsonify(approval_data), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        session.close()
+
+
+@app.route('/approvals', methods=['POST'])
+def create_approval():
+    data = request.get_json()
+    session = Session()
+    try:
+        project_id = data.get("project_id")
+        user_id = data.get("user_id")
+        submitter_id = data.get("submitter_id")
+
+        if not all([project_id, user_id, submitter_id]):
+            return jsonify({"error": "Missing project_id, user_id, or submitter_id"}), 400
+
+        new_approval = Approval(
+            project_id=project_id,
+            user_id=user_id,
+            submitter_id=submitter_id
+        )
+        session.add(new_approval)
+        session.commit()
+
+        return jsonify({"message": "Approval recorded successfully!"}), 201
+
+    except Exception as e:
+        session.rollback()
+        return jsonify({"error": str(e)}), 400
+
+    finally:
+        session.close()
+
+
 
 """ @app.route('/delete-all-users', methods=['DELETE'])
 def delete_all_users():
