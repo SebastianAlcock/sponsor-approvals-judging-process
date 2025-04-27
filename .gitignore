@@ -232,7 +232,7 @@ $RECYCLE.BIN/
 *.lnk
 
 
-*capstone.db
+capstone.db
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode,flask,react
 
