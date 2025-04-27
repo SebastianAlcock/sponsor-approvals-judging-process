@@ -79,3 +79,13 @@ class TrackRequest(Base):
     id = Column(Integer, primary_key=True, autoincrement=True) #SQLAlchemy needs PK
     date = Column(Date)
     track = Column(String(63))
+
+
+class Approval(Base):
+    __tablename__ = 'approvals'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    project_id = Column(Integer, nullable=False)
+    user_id = Column(Integer, nullable=False)
+    submitter_id = Column(Integer, nullable=False)
+
