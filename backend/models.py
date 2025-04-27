@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Text, Date, BLOB, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, Date, BLOB, ForeignKey, DateTime
+from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -88,4 +89,5 @@ class Approval(Base):
     project_id   = Column(Integer, ForeignKey('projects.id'), nullable=False)
     user_id      = Column(Integer, ForeignKey('users.id'),    nullable=False)
     submitter_id = Column(Integer, ForeignKey('users.id'),    nullable=False)
+    created_at   = Column(DateTime, nullable=False, default=datetime.utcnow)
 
