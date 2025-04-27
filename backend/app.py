@@ -4,6 +4,7 @@ from db import Session
 from models import User, Project, TrackRequest, Approval
 import json
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
@@ -508,9 +509,23 @@ def approve_student(project_id, student_id):
             approved_projects.append(project_id)
             if student_id not in approved_students:
                 approved_students.append(student_id)
+
+            # Create approval record 
+            current_user = request.json.get("submitter_id")  
+
+            if not current_user:
+                return jsonify({"error": "Missing submitter_id"}), 400
+
+            new_approval = Approval(
+                project_id=project_id,
+                user_id=student_id,
+                submitter_id=current_user,
+                created_at=datetime.utcnow()
+            )
+            session.add(new_approval)
+
             message = "Student approved for the project."
 
-        # Save back to models
         student.approved_projects = json.dumps(approved_projects)
         project.approved_students = json.dumps(approved_students)
 
@@ -813,7 +828,8 @@ def get_all_approvals():
                 "id": approval.id,
                 "project_name": project.project_name if project else "(Project not found)",
                 "approved_student_name": f"{approved_student.first_name} {approved_student.last_name}" if approved_student else "(Student not found)",
-                "submitter_name": f"{submitter_user.first_name} {submitter_user.last_name}" if submitter_user else "(Approver not found)"
+                "submitter_name": f"{submitter_user.first_name} {submitter_user.last_name}" if submitter_user else "(Approver not found)",
+                "created_at": approval.created_at.strftime("%Y-%m-%d %H:%M") if approval.created_at else ""
             })
 
         return jsonify(approval_data), 200
@@ -851,6 +867,19 @@ def create_approval():
         session.rollback()
         return jsonify({"error": str(e)}), 400
 
+    finally:
+        session.close()
+
+@app.route('/delete-all-approvals', methods=['DELETE'])
+def delete_all_approvals():
+    session = Session()
+    try:
+        session.query(Approval).delete()
+        session.commit()
+        return jsonify({"message": "All approvals deleted successfully!"}), 200
+    except Exception as e:
+        session.rollback()
+        return jsonify({"error": str(e)}), 400
     finally:
         session.close()
 

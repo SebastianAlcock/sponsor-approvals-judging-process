@@ -105,7 +105,8 @@ export default function Directory() {
     { key: "id", name: "Approval ID" },
     { key: "approved_student_name", name: "Approved Student" },
     { key: "project_name", name: "Project Name" },
-    { key: "submitter_name", name: "Approved By" }
+    { key: "submitter_name", name: "Approved By" },
+    { key: "created_at", name: "Time Approved"}
   ];
 
   const filteredUsers = (role) => users.filter(user => user.roles.includes(role));

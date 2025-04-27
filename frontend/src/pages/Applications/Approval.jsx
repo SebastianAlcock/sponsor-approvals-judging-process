@@ -84,7 +84,11 @@ export default function Approval() {
     }
 
     try {
-      const res = await api.patch(`/approve/${project.id}/${student.id}`);
+      const res = await api.patch(`/approve/${project.id}/${student.id}`, {
+        submitter_id: user.id   // <-- add the approving user's id
+      }, {
+        headers: { "Content-Type": "application/json" }
+      });        
       alert("✅ " + res.data.message);
       await fetchAllData(); // Refresh data to update dropdown
     } catch (err) {
