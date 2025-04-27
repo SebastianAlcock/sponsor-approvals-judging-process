@@ -81,3 +81,28 @@ div[aria-colindex="1"] {
   color: #00529B;
   cursor: pointer;
 }
+
+.semesterYearFilter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-size: 1rem;
+}
+
+.semesterYearFilter label {
+  font-weight: bold;
+}
+
+.semesterYearFilter select {
+  padding: 5px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.currentSemesterMessage {
+  margin: 10px 0;
+  font-size: 0.95rem;
+  color: #333;
+}

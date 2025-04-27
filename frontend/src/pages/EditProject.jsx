@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
-import Navbar from ".//Navbar";
+import Navbar from "./Navbar";
 import "../styles/Form.css";
 
 export default function EditProject() {
   const { id } = useParams();
   const navigate = useNavigate();
-  
+
+  const userLocal = JSON.parse(localStorage.getItem("user") || "{}");
+  const userRole = userLocal.roles || "";
+  const userEmail = userLocal.email || "";
+
   const [formData, setFormData] = useState(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -16,20 +20,30 @@ export default function EditProject() {
     async function fetchProject() {
       try {
         const res = await api.get(`/project/${id}`);
-        setFormData(res.data);
+        setFormData({
+          ...res.data,
+          approved: Number(res.data.approved)
+        });
+
+        if (!userRole.includes("admin") && res.data.contact_email !== userEmail) {
+          alert("Unauthorized access.");
+          navigate("/directory");
+        }
       } catch (err) {
         console.error("Error fetching project:", err);
         setError("Failed to load project details.");
       }
     }
     fetchProject();
-  }, [id]);
+  }, [id, navigate, userRole, userEmail]);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === "approved" ? Number(value) : value
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -134,6 +148,17 @@ export default function EditProject() {
 
           <label className="label">Committed</label>
           <textarea name="committed" rows="4" value={formData.committed} onChange={handleChange} />
+
+          {userRole.includes("admin") && (
+            <>
+              <h2>Project Approval (Admin Only)</h2>
+              <label className="label">Approval Status *</label>
+              <select name="approved" onChange={handleChange} value={String(formData.approved)}>
+                <option value="1">Approved</option>
+                <option value="0">Not Approved</option>
+              </select>
+            </>
+          )}
 
           <div style={{ marginTop: "20px" }}>
             <button type="submit">Save Changes</button>

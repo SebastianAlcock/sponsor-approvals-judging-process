@@ -8,6 +8,10 @@ export default function EditUser() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const isAdmin = currentUser.roles?.includes("admin");
+  const currentUserId = currentUser.id;
+
   const [formData, setFormData] = useState(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -16,6 +20,12 @@ export default function EditUser() {
     async function fetchUser() {
       try {
         const res = await api.get(`/user/${id}`);
+        // Access control at page load
+        if (!isAdmin && parseInt(id) !== currentUserId) {
+          alert("Unauthorized access.");
+          navigate("/directory");
+          return;
+        }
         setFormData(res.data);
       } catch (err) {
         console.error("Error fetching user:", err);
@@ -23,13 +33,40 @@ export default function EditUser() {
       }
     }
     fetchUser();
-  }, [id]);
+  }, [id, navigate, isAdmin, currentUserId]);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value, type, checked } = e.target;
+
+    if (name === "roles") {
+      let roleList = formData.roles.split(",").filter(Boolean);
+
+      if (checked) {
+        if (!roleList.includes(value)) roleList.push(value);
+
+        // If adding a role, initialize extra fields
+        if (value === "sponsor") {
+          formData.org_name = formData.org_name || "";
+          formData.org_category = formData.org_category || "";
+          formData.org_industry = formData.org_industry || "";
+          formData.org_website = formData.org_website || "";
+          formData.org_address = formData.org_address || "";
+          formData.position_title = formData.position_title || "";
+        }
+        if (value === "student") {
+          formData.ucid = formData.ucid || "";
+          formData.major = formData.major || "";
+          formData.minor = formData.minor || "";
+          formData.specialization = formData.specialization || "";
+        }
+      } else {
+        roleList = roleList.filter(r => r !== value);
+      }
+
+      setFormData({ ...formData, roles: roleList.join(",") });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -38,7 +75,7 @@ export default function EditUser() {
       await api.patch(`/user/${id}`, formData);
       setSuccess("User updated successfully! Redirecting...");
       setError("");
-      setTimeout(() => navigate(`/user/${id}`), 2000);
+      setTimeout(() => navigate(`/user/${id}`, { state: { refresh: true } }), 2000);
     } catch (err) {
       console.error(err);
       setError(err.response?.data?.error || "Something went wrong");
@@ -57,7 +94,7 @@ export default function EditUser() {
       <div className="proposal page">
         <h1>Edit User</h1>
 
-        <form className="proposal form" onSubmit={handleSubmit}>
+        <form className="proposal form" onSubmit={(e) => { e.preventDefault(); handleSubmit(e); }}>
           <h2>General Information</h2>
 
           <label className="label">First Name *</label>
@@ -72,10 +109,42 @@ export default function EditUser() {
           <label className="label">Phone *</label>
           <input name="phone" value={formData.phone} onChange={handleChange} required />
 
+          {isAdmin && (
+            <>
+              <h2>Roles (Admin Only)</h2>
+              <label>
+                <input
+                  type="checkbox"
+                  name="roles"
+                  value="student"
+                  checked={formData.roles.includes("student")}
+                  onChange={handleChange}
+                /> Student
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  name="roles"
+                  value="sponsor"
+                  checked={formData.roles.includes("sponsor")}
+                  onChange={handleChange}
+                /> Sponsor
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  name="roles"
+                  value="admin"
+                  checked={formData.roles.includes("admin")}
+                  onChange={handleChange}
+                /> Admin
+              </label>
+            </>
+          )}
+
           {isStudent && (
             <>
               <h2>Student Information</h2>
-
               <label className="label">UCID</label>
               <input name="ucid" value={formData.ucid || ""} onChange={handleChange} />
 
@@ -93,7 +162,6 @@ export default function EditUser() {
           {isSponsor && (
             <>
               <h2>Organization Information</h2>
-
               <label className="label">Organization Name</label>
               <input name="org_name" value={formData.org_name || ""} onChange={handleChange} />
 

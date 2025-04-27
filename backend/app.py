@@ -641,16 +641,27 @@ def update_user(id):
         if not user:
             return jsonify({"error": "User not found"}), 404
 
+        # General fields
         user.first_name = data.get('first_name', user.first_name)
         user.last_name = data.get('last_name', user.last_name)
-        user.ucid = data.get('ucid', user.ucid)
         user.email = data.get('email', user.email)
         user.phone = data.get('phone', user.phone)
         user.roles = data.get('roles', user.roles)
+
+        # Student fields
+        user.ucid = data.get('ucid', user.ucid)
         user.major = data.get('major', user.major)
         user.minor = data.get('minor', user.minor)
         user.specialization = data.get('specialization', user.specialization)
-        
+
+        # Sponsor fields 
+        user.position_title = data.get('position_title', user.position_title)
+        user.org_name = data.get('org_name', user.org_name)
+        user.org_category = data.get('org_category', user.org_category)
+        user.org_industry = data.get('org_industry', user.org_industry)
+        user.org_website = data.get('org_website', user.org_website)
+        user.org_address = data.get('org_address', user.org_address)
+
         session.commit()
 
         return jsonify({"message": "User updated successfully!"}), 200
@@ -791,16 +802,25 @@ def get_all_approvals():
     try:
         approvals = session.query(Approval).all()
 
-        approval_data = [{
-            "id": approval.id,
-            "project_id": approval.project_id,
-            "user_id": approval.user_id,
-            "submitter_id": approval.submitter_id
-        } for approval in approvals]
+        approval_data = []
+        for approval in approvals:
+            # Fetch related user and project objects
+            approved_student = session.query(User).filter_by(id=approval.user_id).first()
+            submitter_user = session.query(User).filter_by(id=approval.submitter_id).first()
+            project = session.query(Project).filter_by(id=approval.project_id).first()
+
+            approval_data.append({
+                "id": approval.id,
+                "project_name": project.project_name if project else "(Project not found)",
+                "approved_student_name": f"{approved_student.first_name} {approved_student.last_name}" if approved_student else "(Student not found)",
+                "submitter_name": f"{submitter_user.first_name} {submitter_user.last_name}" if submitter_user else "(Approver not found)"
+            })
 
         return jsonify(approval_data), 200
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
     finally:
         session.close()
 
