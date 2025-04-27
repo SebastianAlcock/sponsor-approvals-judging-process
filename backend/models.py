@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, Date, BLOB
+from sqlalchemy import Column, Integer, String, Text, Date, BLOB, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -85,7 +85,7 @@ class Approval(Base):
     __tablename__ = 'approvals'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    project_id = Column(Integer, nullable=False)
-    user_id = Column(Integer, nullable=False)
-    submitter_id = Column(Integer, nullable=False)
+    project_id   = Column(Integer, ForeignKey('projects.id'), nullable=False)
+    user_id      = Column(Integer, ForeignKey('users.id'),    nullable=False)
+    submitter_id = Column(Integer, ForeignKey('users.id'),    nullable=False)
 
