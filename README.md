@@ -30,11 +30,23 @@
 - Automation ensures immediate result calculations and transparent score auditing.
 
 
-##### Using the backend 
+##### Introduction - Using the backend 
+This documentation covers the Flask-based backend API for automating sponsor approvals and the judging process in the Capstone program. It details installation instructions, configuration, and all available endpoints.
+
+## Prerequisities
+- Python 3.0+ 
+- pip
+- DB Browser for SQLite (https://sqlitebrowser.org/)
+- Git
+
+## Installation 
+git clone https://github.com/SebastianAlcock/sponsor-approvals-judging-process.git 
+pip install -r requirements.txt (this will install all required dependencies)
 
 ## Install required dependencies 
 Run pip install -r requirements.txt 
-## Run the Application: flask run 
+## Run the Application: 
+flask run 
 ## View the database:  
     - 2 methods: 
         - install DB Browser for SQLite and open the capstone.db file (preferred)
@@ -42,6 +54,7 @@ Run pip install -r requirements.txt
             - run sqlite3, .open capstone.db, .tables
 
 ## Using the API routes 
+Use the following curl commands in your terminal to query the APIs while the application is running
 # 1. POST /register-student: Register a Student 
 curl -X POST http://127.0.0.1:5000/register-student \
 -H "Content-Type: application/json" \
@@ -88,7 +101,7 @@ curl -X GET http://127.0.0.1:5000/users
 # 5. GET /projects: Get All Projects
 curl -X GET http://127.0.0.1:5000/projects
 
-# 6. GET /user/{email}: Get One User by Email
+# 6. GET /user/{email}: Get One User by ID
 curl -X GET http://127.0.0.1:5000/user/alice.smith@example.com
 
 # 7. GET /project/{id}: Get One Project by ID
@@ -138,7 +151,22 @@ curl -X PATCH http://127.0.0.1:5000/apply/1 \
 curl -X PATCH http://127.0.0.1:5000/approve/1/1 \
 -H "Content-Type: application/json"
 
-# 11. PATCH /commit/{user_id}: Commit a User to a Project
+# 11. POST /approvals : Record a sponsor approval 
+curl -X POST http://127.0.0.1:5000/approvals \
+  -H "Content-Type: application/json" \
+  -d '{
+    "project_id": 3,
+    "user_id": 2,
+    "submitter_id": 3
+  }'
+
+# 12. GET /approvals : Get all approval records
+curl -X GET http://127.0.0.1:5000/approvals
+
+# 13. DELETE /delete-all-approvals: Delete all approval records
+curl -X DELETE http://127.0.0.1:5000/delete-all-approvals
+
+# 14. PATCH /commit/{user_id}: Commit a User to a Project
 curl -X PATCH http://127.0.0.1:5000/commit/1 \
 -H "Content-Type: application/json" \
 -d '{
