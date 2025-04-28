@@ -78,7 +78,7 @@ This documentation covers the Flask-based backend API for automating sponsor app
 Use the following curl commands in your terminal to query the APIs while the application is running
 #### 1. POST /register-student: Register a Student 
 What it does:
-– Registers a new user (student or sponsor) in one flexible endpoint.
+- Registers a new user (student or sponsor) in one flexible endpoint.
 How it works:
 
 Reads JSON payload via request.get_json().
