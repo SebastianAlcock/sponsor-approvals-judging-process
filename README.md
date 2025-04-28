@@ -161,12 +161,42 @@ curl -X POST http://127.0.0.1:5000/login \
 }'
 
 #### 4. GET /users: Get All Users
+What it does: 
+- Retrieves all registered users from the database.
+How it works: 
+
+- Queries all User entries from the database via session.query(User).all().
+
+- Serializes all fields into a JSON list.
+
+- Returns 200 with list of users; returns 500 on error.
+Sample curl query:
 curl -X GET http://127.0.0.1:5000/users
 
 #### 5. GET /projects: Get All Projects
+What it does: 
+- Retrieves all projects in the database.
+How it works: 
+
+- Queries all Project entries in the database via session.query(Project).all().
+
+- Serializes each project’s fields into a JSON list.
+
+- Returns 200 on success; 500 on error.
+Sample curl query: 
 curl -X GET http://127.0.0.1:5000/projects
 
 #### 6. GET /user/{email}: Get One User by ID
+What it does: 
+- Retrieves a specific user based on their ID.
+How it works: 
+
+- session.query(User).filter_by(id=id).first() fetches the user.
+
+- If found, serializes user fields into JSON.
+
+- Returns 200 if user found, 404 if not found.
+Sample curl query: 
 curl -X GET http://127.0.0.1:5000/user/alice.smith@example.com
 
 #### 7. GET /project/{id}: Get One Project by ID
