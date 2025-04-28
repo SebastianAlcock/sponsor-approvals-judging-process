@@ -210,6 +210,7 @@ What it does:
 - Retrieves a specific project based on its ID.
 <br>
 How it works: 
+
 - Session.query(Project).filter_by(id=id).first() fetches the project.
 
 - If found, serializes project fields into JSON.
@@ -219,6 +220,19 @@ Sample curl query:
 curl -X GET http://127.0.0.1:5000/project/1
 
 #### 8. POST /createproject: Create a New Project
+What it does: 
+- Creates a new project record in the system.
+<br>
+How it works: 
+
+- Reads JSON payload with all project details.
+
+- Constructs a Project object with fields like year, semester, contact details, project details, etc.
+
+- session.add(new_project) and session.commit().
+
+- Returns 201 on success, 400 on failure.
+Sample curl query: 
 curl -X POST http://127.0.0.1:5000/createproject \
 -H "Content-Type: application/json" \
 -d '{
@@ -252,6 +266,17 @@ curl -X POST http://127.0.0.1:5000/createproject \
 }'
 
 #### 9. PATCH /apply/{user_id}: Apply a User to a Project
+What it does: 
+- Allows a student to apply to a project.
+<br>
+How it works: 
+
+- Reads JSON payload to get the project ID.
+
+- Updates the user’s applied_projects and the project’s applied_students fields (both as JSON arrays).
+
+- session.commit() saves the change.
+Sample curl query: 
 curl -X PATCH http://127.0.0.1:5000/apply/1 \
 -H "Content-Type: application/json" \
 -d '{
@@ -259,10 +284,30 @@ curl -X PATCH http://127.0.0.1:5000/apply/1 \
 }'
 
 #### 10. PATCH /approve/{project_id, student_id}: Approve a Student for a Project
+What it does: 
+- Sponsor approves (or unapproves) a student for a project.
+<br>
+How it works: 
+
+- Toggles whether the student is approved for the given project ID.
+
+- Also records an entry into the Approval table (with project_id, user_id, submitter_id).
+
+- session.commit() saves changes.
+Sample curl query: 
 curl -X PATCH http://127.0.0.1:5000/approve/1/1 \
 -H "Content-Type: application/json"
 
 #### 11. POST /approvals : Record a sponsor approval 
+What it does: 
+- Manually creates an approval record in the approvals database.
+<br>
+How it works:
+
+- Reads JSON payload with project_id, user_id, and submitter_id.
+
+- Creates a new Approval object and saves it with session.commit().
+Sample curl query: 
 curl -X POST http://127.0.0.1:5000/approvals \
   -H "Content-Type: application/json" \
   -d '{
@@ -272,12 +317,42 @@ curl -X POST http://127.0.0.1:5000/approvals \
   }'
 
 #### 12. GET /approvals : Get all approval records
+What it does: 
+- Fetches all sponsor approvals recorded in the system.
+<br>
+How it works: 
+- Queries all Approval entries.
+
+- Joins the project, approved student, and submitter for each approval.
+
+- Returns 200 with a list of approvals (with human-readable names).
+Sample query: 
 curl -X GET http://127.0.0.1:5000/approvals
 
 #### 13. DELETE /delete-all-approvals: Delete all approval records
+What it does: 
+- Deletes all entries in the Approval table.
+<br>
+How it works: 
+
+- session.query(Approval).delete() removes all rows.
+
+- session.commit() finalizes the deletion.
+Sample curl query: 
 curl -X DELETE http://127.0.0.1:5000/delete-all-approvals
 
 #### 14. PATCH /commit/{user_id}: Commit a User to a Project
+What it does: 
+- Lets a student formally commit to one project.
+<br>
+How it works: 
+
+- Checks if the student is already approved for the project.
+
+- Updates user.committed_project and project.confirmed_students list.
+
+- session.commit() saves changes.
+Sample curl query: 
 curl -X PATCH http://127.0.0.1:5000/commit/1 \
 -H "Content-Type: application/json" \
 -d '{
