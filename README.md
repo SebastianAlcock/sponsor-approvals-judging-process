@@ -174,6 +174,7 @@ How it works:
 - Serializes all fields into a JSON list.
 
 - Returns 200 with list of users; returns 500 on error.
+
 Sample curl query:
 curl -X GET http://127.0.0.1:5000/users
 
@@ -188,6 +189,7 @@ How it works:
 - Serializes each project’s fields into a JSON list.
 
 - Returns 200 on success; 500 on error.
+
 Sample curl query: 
 curl -X GET http://127.0.0.1:5000/projects
 
@@ -202,6 +204,7 @@ How it works:
 - If found, serializes user fields into JSON.
 
 - Returns 200 if user found, 404 if not found.
+
 Sample curl query: 
 curl -X GET http://127.0.0.1:5000/user/alice.smith@example.com
 
@@ -216,6 +219,7 @@ How it works:
 - If found, serializes project fields into JSON.
 
 - Returns 200 if found, 404 if not found.
+
 Sample curl query: 
 curl -X GET http://127.0.0.1:5000/project/1
 
@@ -232,6 +236,7 @@ How it works:
 - session.add(new_project) and session.commit().
 
 - Returns 201 on success, 400 on failure.
+
 Sample curl query: 
 curl -X POST http://127.0.0.1:5000/createproject \
 -H "Content-Type: application/json" \
@@ -276,6 +281,7 @@ How it works:
 - Updates the user’s applied_projects and the project’s applied_students fields (both as JSON arrays).
 
 - session.commit() saves the change.
+
 Sample curl query: 
 curl -X PATCH http://127.0.0.1:5000/apply/1 \
 -H "Content-Type: application/json" \
@@ -294,6 +300,7 @@ How it works:
 - Also records an entry into the Approval table (with project_id, user_id, submitter_id).
 
 - session.commit() saves changes.
+
 Sample curl query: 
 curl -X PATCH http://127.0.0.1:5000/approve/1/1 \
 -H "Content-Type: application/json"
@@ -307,6 +314,7 @@ How it works:
 - Reads JSON payload with project_id, user_id, and submitter_id.
 
 - Creates a new Approval object and saves it with session.commit().
+
 Sample curl query: 
 curl -X POST http://127.0.0.1:5000/approvals \
   -H "Content-Type: application/json" \
@@ -327,6 +335,7 @@ How it works:
 - Joins the project, approved student, and submitter for each approval.
 
 - Returns 200 with a list of approvals (with human-readable names).
+
 Sample query: 
 curl -X GET http://127.0.0.1:5000/approvals
 
@@ -339,6 +348,7 @@ How it works:
 - session.query(Approval).delete() removes all rows.
 
 - session.commit() finalizes the deletion.
+
 Sample curl query: 
 curl -X DELETE http://127.0.0.1:5000/delete-all-approvals
 
@@ -353,6 +363,7 @@ How it works:
 - Updates user.committed_project and project.confirmed_students list.
 
 - session.commit() saves changes.
+
 Sample curl query: 
 curl -X PATCH http://127.0.0.1:5000/commit/1 \
 -H "Content-Type: application/json" \
