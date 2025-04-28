@@ -321,6 +321,7 @@ What it does:
 - Fetches all sponsor approvals recorded in the system.
 <br>
 How it works: 
+
 - Queries all Approval entries.
 
 - Joins the project, approved student, and submitter for each approval.
