@@ -206,6 +206,16 @@ Sample curl query:
 curl -X GET http://127.0.0.1:5000/user/alice.smith@example.com
 
 #### 7. GET /project/{id}: Get One Project by ID
+What it does: 
+- Retrieves a specific project based on its ID.
+<br>
+How it works: 
+- Session.query(Project).filter_by(id=id).first() fetches the project.
+
+- If found, serializes project fields into JSON.
+
+- Returns 200 if found, 404 if not found.
+Sample curl query: 
 curl -X GET http://127.0.0.1:5000/project/1
 
 #### 8. POST /createproject: Create a New Project
