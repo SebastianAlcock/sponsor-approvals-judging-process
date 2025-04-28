@@ -38,13 +38,13 @@ The ideal Capstone team to take over the remainder of this project would be one 
  
 ## Installation
 
-#### Prerequisities
+#### Prerequisities:
 - Python 3.0+ 
 - pip
 - DB Browser for SQLite (https://sqlitebrowser.org/)
 - Git
 
-#### Installation 
+#### Cloning the Repository: 
     git clone https://github.com/SebastianAlcock/sponsor-approvals-judging-process.git
     pip install -r requirements.txt (this will install all required dependencies)
 
@@ -193,3 +193,15 @@ curl -X PATCH http://127.0.0.1:5000/commit/1 \
 -d '{
     "project_name": "AI Research"
 }'
+
+## Frontend
+
+    TODO: Explain all pages and page functions (excluding styles but explain style folder)
+
+## Challenges and Unfulfilled Requirements
+
+    TODO:
+
+## Future Plans
+
+    TODO:
