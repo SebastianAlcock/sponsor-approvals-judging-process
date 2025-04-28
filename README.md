@@ -77,6 +77,19 @@ This documentation covers the Flask-based backend API for automating sponsor app
 #### Using the API routes 
 Use the following curl commands in your terminal to query the APIs while the application is running
 #### 1. POST /register-student: Register a Student 
+What it does:
+– Registers a new user (student or sponsor) in one flexible endpoint.
+How it works:
+
+Reads JSON payload via request.get_json().
+
+Hashes data['password'] with werkzeug.security.generate_password_hash.
+
+Constructs a User(...) SQLAlchemy object with both student and sponsor fields (many may be None).
+
+Opens a Session(), session.add(new_user) + session.commit().
+
+On success returns 201 with a JSON message; on error rolls back and returns 400.
 curl -X POST http://127.0.0.1:5000/register-student \
 -H "Content-Type: application/json" \
 -d '{
