@@ -1,14 +1,16 @@
-# Project 1: 
-## Automating Capstone Sponsor Approvals &amp; Judging Process
+# Software Automation Team 2:
+### Automating Capstone Sponsor Approvals
 
-### Sponsor Approval Automation
+## Background Information
+
+### Project Requirements:
 
 - Implement an online application system for sponsor approvals.
 - Automatically verify student eligibility based on predefined rules.
 - Auto-route applications to sponsors for review and approval.
 - Track and audit the entire approval process with real-time updates.
 
-##### Explicit Sponsor Approval Rules:
+### Explicit Sponsor Approval Rules:
 
 - Students must apply to at least one project at the sponsor table.
 - Their name must appear in the sponsor approval database.
@@ -16,45 +18,63 @@
 - They must attend a round table meeting with their sponsor and team.
 - An official photo with the team and sponsor must be taken for documentation.
 
-### Judging Process Automation
+### Co-Sponsors:
+- Dr. Osama Eljabiri
+- Benjamin Shuster
 
-- Develop a digital platform for structured judging across multiple panels.
-- Provide a standardized rubric for real-time scoring.
-- Automate the ranking and normalization of scores across different judges.
-- Generate real-time leaderboards and final reports for award determination.
+### Team Members:
+- Sebastian Alcock (Project Manager)
+- Anurag Agarwal
+- Justin Nguyen
 
-##### Judging Rubric & Decision Criteria:
+### Team Composition:
+The ideal Capstone team to take over the remainder of this project would be one project manager, one backend developer, and one frontend developer. 
+- Project Manager: 
+    - Owns the roadmap, milestones, and day-to-day coordination. They’d work with your stakeholders to refine requirements (“what exactly goes into the approval flow?”, “how should the judging rubric be surfaced?”), break them down into sprint tasks, and keep everyone on schedule. They also run standup meetings. 
+- Backend Developer: 
+    - Fully owns the Flask service and database, writing and testing all new endpoints.
+- Frontend Developer: 
+    - Fully owns the React frontend, including all styling and components.
+ 
+## Installation
 
-- Judges evaluate projects based on impact, innovation, feasibility, and execution.
-- Weighting and normalization ensure fairness across judging panels.
-- Automation ensures immediate result calculations and transparent score auditing.
-
-
-##### Introduction - Using the backend 
-This documentation covers the Flask-based backend API for automating sponsor approvals and the judging process in the Capstone program. It details installation instructions, configuration, and all available endpoints.
-- Flask documentation: https://flask.palletsprojects.com/en/stable/ 
-
-## Prerequisities
+#### Prerequisities
 - Python 3.0+ 
 - pip
 - DB Browser for SQLite (https://sqlitebrowser.org/)
 - Git
 
-## Installation 
-- git clone https://github.com/SebastianAlcock/sponsor-approvals-judging-process.git 
-- pip install -r requirements.txt (this will install all required dependencies)
+#### Installation 
+    git clone https://github.com/SebastianAlcock/sponsor-approvals-judging-process.git
+    pip install -r requirements.txt (this will install all required dependencies)
 
-## Install required dependencies 
-Run pip install -r requirements.txt 
-## Run the Application: 
-flask run 
-## View the database:  
-    2 methods: 
-        - install DB Browser for SQLite and open the capstone.db file from this repo(preferred - gives a visualization for the DB)
-        - use terminal to execute SQLite commands: 
-            - run sqlite3, .open capstone.db, .tables
+#### Install required backend dependencies:
+###### For backend, from parent folder run:
+    cd backend
+    pip install -r requirements.txt 
+###### For frontend, from parent folder run:
+    cd frontend
+    npm install
 
-## Using the API routes 
+#### Run the Application: 
+###### For backend, from parent folder run:
+    cd backend
+    python -m flask run
+###### For frontend, from parent folder run:
+    cd frontend
+    npm start
+
+## Backend
+This documentation covers the Flask-based backend API for automating sponsor approvals and the judging process in the Capstone program. It details installation instructions, configuration, and all available endpoints.
+- Flask documentation: https://flask.palletsprojects.com/en/stable/ 
+
+#### View the database:  
+2 methods: 
+- install DB Browser for SQLite and open the capstone.db file from this repo(preferred - gives a visualization for the DB)
+- use terminal to execute SQLite commands: 
+    - run sqlite3, .open capstone.db, .tables
+
+#### Using the API routes 
 Use the following curl commands in your terminal to query the APIs while the application is running
 ## 1. POST /register-student: Register a Student 
 curl -X POST http://127.0.0.1:5000/register-student \
@@ -71,7 +91,7 @@ curl -X POST http://127.0.0.1:5000/register-student \
     "specialization": "Web Development"
 }'
 
-## 2. POST /register-sponsor: Register a Sponsor
+#### 2. POST /register-sponsor: Register a Sponsor
 curl -X POST http://127.0.0.1:5000/register-sponsor \
 -H "Content-Type: application/json" \
 -d '{
@@ -88,7 +108,7 @@ curl -X POST http://127.0.0.1:5000/register-sponsor \
     "org_address": "123 Tech Park, Silicon Valley, CA"
 }'
 
-## 3. POST /login: Login a User 
+#### 3. POST /login: Login a User 
 curl -X POST http://127.0.0.1:5000/login \
 -H "Content-Type: application/json" \
 -d '{
@@ -96,19 +116,19 @@ curl -X POST http://127.0.0.1:5000/login \
     "password": "password789"
 }'
 
-## 4. GET /users: Get All Users
+#### 4. GET /users: Get All Users
 curl -X GET http://127.0.0.1:5000/users
 
-## 5. GET /projects: Get All Projects
+#### 5. GET /projects: Get All Projects
 curl -X GET http://127.0.0.1:5000/projects
 
-## 6. GET /user/{email}: Get One User by ID
+#### 6. GET /user/{email}: Get One User by ID
 curl -X GET http://127.0.0.1:5000/user/alice.smith@example.com
 
-## 7. GET /project/{id}: Get One Project by ID
+#### 7. GET /project/{id}: Get One Project by ID
 curl -X GET http://127.0.0.1:5000/project/1
 
-## 8. POST /createproject: Create a New Project
+#### 8. POST /createproject: Create a New Project
 curl -X POST http://127.0.0.1:5000/createproject \
 -H "Content-Type: application/json" \
 -d '{
@@ -141,18 +161,18 @@ curl -X POST http://127.0.0.1:5000/createproject \
     "confirmed_students": []
 }'
 
-## 9. PATCH /apply/{user_id}: Apply a User to a Project
+#### 9. PATCH /apply/{user_id}: Apply a User to a Project
 curl -X PATCH http://127.0.0.1:5000/apply/1 \
 -H "Content-Type: application/json" \
 -d '{
     "project_name": "AI Research"
 }'
 
-## 10. PATCH /approve/{project_id, student_id}: Approve a Student for a Project
+#### 10. PATCH /approve/{project_id, student_id}: Approve a Student for a Project
 curl -X PATCH http://127.0.0.1:5000/approve/1/1 \
 -H "Content-Type: application/json"
 
-## 11. POST /approvals : Record a sponsor approval 
+#### 11. POST /approvals : Record a sponsor approval 
 curl -X POST http://127.0.0.1:5000/approvals \
   -H "Content-Type: application/json" \
   -d '{
@@ -161,25 +181,15 @@ curl -X POST http://127.0.0.1:5000/approvals \
     "submitter_id": 3
   }'
 
-## 12. GET /approvals : Get all approval records
+#### 12. GET /approvals : Get all approval records
 curl -X GET http://127.0.0.1:5000/approvals
 
-## 13. DELETE /delete-all-approvals: Delete all approval records
+#### 13. DELETE /delete-all-approvals: Delete all approval records
 curl -X DELETE http://127.0.0.1:5000/delete-all-approvals
 
-## 14. PATCH /commit/{user_id}: Commit a User to a Project
+#### 14. PATCH /commit/{user_id}: Commit a User to a Project
 curl -X PATCH http://127.0.0.1:5000/commit/1 \
 -H "Content-Type: application/json" \
 -d '{
     "project_name": "AI Research"
 }'
-
-## Ideal Team Composition 
-The ideal capstone team to take over the remainder of this project would be one project manager, one backend developer, and one frontend developer. 
-- Project Manager: 
-    - Owns the roadmap, milestones, and day-to-day coordination. They’d work with your stakeholders to refine requirements (“what exactly goes into the approval flow?”, “how should the judging rubric be surfaced?”), break them down into sprint tasks, and keep everyone on schedule. They also run standup meetings. 
-- Backend Developer: 
-    - Fully owns the Flask service and database, writing and testing all new endpoints.
-- Frontend Developer: 
-    - Fully owns the React frontend, including all styling and components. 
-
