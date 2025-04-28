@@ -32,6 +32,7 @@
 
 ##### Introduction - Using the backend 
 This documentation covers the Flask-based backend API for automating sponsor approvals and the judging process in the Capstone program. It details installation instructions, configuration, and all available endpoints.
+- Flask documentation: https://flask.palletsprojects.com/en/stable/ 
 
 ## Prerequisities
 - Python 3.0+ 
@@ -49,7 +50,7 @@ Run pip install -r requirements.txt
 flask run 
 ## View the database:  
     2 methods: 
-        - install DB Browser for SQLite and open the capstone.db file (preferred)
+        - install DB Browser for SQLite and open the capstone.db file from this repo(preferred - gives a visualization for the DB)
         - use terminal to execute SQLite commands: 
             - run sqlite3, .open capstone.db, .tables
 
