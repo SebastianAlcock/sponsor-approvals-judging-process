@@ -80,7 +80,7 @@ Use the following curl commands in your terminal to query the APIs while the app
 #### 1. POST /register-student: Register a Student 
 What it does:
 - Registers a new student with inputted information.  
-
+<br>
 How it works:
 
 - Reads JSON payload via request.get_json().
