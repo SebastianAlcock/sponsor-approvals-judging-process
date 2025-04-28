@@ -40,15 +40,15 @@ This documentation covers the Flask-based backend API for automating sponsor app
 - Git
 
 ## Installation 
-git clone https://github.com/SebastianAlcock/sponsor-approvals-judging-process.git 
-pip install -r requirements.txt (this will install all required dependencies)
+- git clone https://github.com/SebastianAlcock/sponsor-approvals-judging-process.git 
+- pip install -r requirements.txt (this will install all required dependencies)
 
 ## Install required dependencies 
 Run pip install -r requirements.txt 
 ## Run the Application: 
 flask run 
 ## View the database:  
-    - 2 methods: 
+    2 methods: 
         - install DB Browser for SQLite and open the capstone.db file (preferred)
         - use terminal to execute SQLite commands: 
             - run sqlite3, .open capstone.db, .tables
