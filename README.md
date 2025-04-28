@@ -79,14 +79,14 @@ Use the following curl commands in your terminal to query the APIs while the app
 
 #### 1. POST /register-student: Register a Student 
 What it does:
-- Registers a new user (student or sponsor) in one flexible endpoint.
+- Registers a new student with inputted information.
 How it works:
 
 - Reads JSON payload via request.get_json().
 
 - Hashes data['password'] with werkzeug.security.generate_password_hash.
 
-- Constructs a User(...) SQLAlchemy object with both student and sponsor fields (many may be None).
+- Constructs a User(...) SQLAlchemy object.
 
 - Opens a Session(), session.add(new_user) + session.commit().
 
@@ -108,6 +108,21 @@ curl -X POST http://127.0.0.1:5000/register-student \
 }'
 
 #### 2. POST /register-sponsor: Register a Sponsor
+What it does:
+- Registers a new sponsor with inputted information.
+How it works:
+
+- Reads JSON payload via request.get_json().
+
+- Hashes data['password'] with werkzeug.security.generate_password_hash.
+
+- Constructs a User(...) SQLAlchemy object.
+
+- Opens a Session(), session.add(new_user) + session.commit().
+
+- On success returns 201 with a JSON message; on error rolls back and returns 400.
+
+Sample curl query: 
 curl -X POST http://127.0.0.1:5000/register-sponsor \
 -H "Content-Type: application/json" \
 -d '{
@@ -125,6 +140,19 @@ curl -X POST http://127.0.0.1:5000/register-sponsor \
 }'
 
 #### 3. POST /login: Login a User 
+What it does: 
+- Authenticates an existing user using their email and password.
+How it works: 
+
+- Reads JSON payload via request.get_json().
+
+- Finds the user by email using session.query(User).filter_by(email=...).first().
+
+- Checks hashed password with werkzeug.security.check_password_hash.
+
+- On success, returns user info; on failure, returns 401 Unauthorized.
+
+Sample curl query: 
 curl -X POST http://127.0.0.1:5000/login \
 -H "Content-Type: application/json" \
 -d '{
