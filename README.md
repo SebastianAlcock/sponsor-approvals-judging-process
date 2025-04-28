@@ -175,10 +175,10 @@ curl -X PATCH http://127.0.0.1:5000/commit/1 \
 
 ## Ideal Team Composition 
 The ideal capstone team to take over the remainder of this project would be one project manager, one backend developer, and one frontend developer. 
-Project Manager: 
-- Owns the roadmap, milestones, and day-to-day coordination. They’d work with your stakeholders to refine requirements (“what exactly goes into the approval flow?”, “how should the judging rubric be surfaced?”), break them down into sprint tasks, and keep everyone on schedule. They also run standup meetings. 
-Backend Developer: 
-- Fully owns the Flask service and database, writing and testing all new endpoints.
-Frontend Developer: 
-- Fully owns the React frontend, including all styling and components. 
+- Project Manager: 
+    - Owns the roadmap, milestones, and day-to-day coordination. They’d work with your stakeholders to refine requirements (“what exactly goes into the approval flow?”, “how should the judging rubric be surfaced?”), break them down into sprint tasks, and keep everyone on schedule. They also run standup meetings. 
+- Backend Developer: 
+    - Fully owns the Flask service and database, writing and testing all new endpoints.
+-Frontend Developer: 
+    - Fully owns the React frontend, including all styling and components. 
 
