@@ -76,7 +76,7 @@ This documentation covers the Flask-based backend API for automating sponsor app
 
 #### Using the API routes 
 Use the following curl commands in your terminal to query the APIs while the application is running
-## 1. POST /register-student: Register a Student 
+#### 1. POST /register-student: Register a Student 
 curl -X POST http://127.0.0.1:5000/register-student \
 -H "Content-Type: application/json" \
 -d '{
