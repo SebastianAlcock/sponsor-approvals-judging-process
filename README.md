@@ -198,7 +198,11 @@ curl -X PATCH http://127.0.0.1:5000/commit/1 \
 
     TODO: Explain all pages and page functions (excluding styles but explain style folder)
 
-## Challenges and Unfulfilled Requirements
+## Current Issues or Challenges
+
+    TODO:
+
+## Unfulfilled Requirements
 
     TODO:
 
