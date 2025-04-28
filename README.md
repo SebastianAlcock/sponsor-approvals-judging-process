@@ -179,6 +179,6 @@ The ideal capstone team to take over the remainder of this project would be one 
     - Owns the roadmap, milestones, and day-to-day coordination. They’d work with your stakeholders to refine requirements (“what exactly goes into the approval flow?”, “how should the judging rubric be surfaced?”), break them down into sprint tasks, and keep everyone on schedule. They also run standup meetings. 
 - Backend Developer: 
     - Fully owns the Flask service and database, writing and testing all new endpoints.
--Frontend Developer: 
+- Frontend Developer: 
     - Fully owns the React frontend, including all styling and components. 
 
