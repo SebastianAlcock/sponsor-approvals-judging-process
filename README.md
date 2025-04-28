@@ -79,7 +79,7 @@ Use the following curl commands in your terminal to query the APIs while the app
 
 #### 1. POST /register-student: Register a Student 
 What it does:
-- Registers a new student with inputted information.
+- Registers a new student with inputted information.  
 How it works:
 
 - Reads JSON payload via request.get_json().
@@ -109,7 +109,7 @@ curl -X POST http://127.0.0.1:5000/register-student \
 
 #### 2. POST /register-sponsor: Register a Sponsor
 What it does:
-- Registers a new sponsor with inputted information.
+- Registers a new sponsor with inputted information.  
 How it works:
 
 - Reads JSON payload via request.get_json().
@@ -141,7 +141,7 @@ curl -X POST http://127.0.0.1:5000/register-sponsor \
 
 #### 3. POST /login: Login a User 
 What it does: 
-- Authenticates an existing user using their email and password.
+- Authenticates an existing user using their email and password.  
 How it works: 
 
 - Reads JSON payload via request.get_json().
@@ -162,7 +162,7 @@ curl -X POST http://127.0.0.1:5000/login \
 
 #### 4. GET /users: Get All Users
 What it does: 
-- Retrieves all registered users from the database.
+- Retrieves all registered users from the database.  
 How it works: 
 
 - Queries all User entries from the database via session.query(User).all().
@@ -175,7 +175,7 @@ curl -X GET http://127.0.0.1:5000/users
 
 #### 5. GET /projects: Get All Projects
 What it does: 
-- Retrieves all projects in the database.
+- Retrieves all projects in the database.  
 How it works: 
 
 - Queries all Project entries in the database via session.query(Project).all().
@@ -188,7 +188,7 @@ curl -X GET http://127.0.0.1:5000/projects
 
 #### 6. GET /user/{email}: Get One User by ID
 What it does: 
-- Retrieves a specific user based on their ID.
+- Retrieves a specific user based on their ID.  
 How it works: 
 
 - session.query(User).filter_by(id=id).first() fetches the user.
