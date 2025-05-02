@@ -1,99 +1,147 @@
-# Software Automation Team 2:
-### Automating Capstone Sponsor Approvals
+# Software Automation Team 2  
+## Automating Capstone Sponsor Approvals
 
-## Background Information
+---
 
-### Project Requirements:
+## 🧠 Background Information
 
-- Implement an online application system for sponsor approvals.
-- Automatically verify student eligibility based on predefined rules.
-- Auto-route applications to sponsors for review and approval.
+### 📌 Project Requirements
+
+- Implement an online application system for sponsor approvals.  
+- Automatically verify student eligibility based on predefined rules.  
+- Auto-route applications to sponsors for review and approval.  
 - Track and audit the entire approval process with real-time updates.
 
-### Explicit Sponsor Approval Rules:
+### ✅ Explicit Sponsor Approval Rules
 
-- Students must apply to at least one project at the sponsor table.
-- Their name must appear in the sponsor approval database.
-- Students must commit to only one approved project via the Discord commitment channel.
-- They must attend a round table meeting with their sponsor and team.
+- Students must apply to at least one project at the sponsor table.  
+- Their name must appear in the sponsor approval database.  
+- Students must commit to only one approved project via the Discord commitment channel.  
+- They must attend a round table meeting with their sponsor and team.  
 - An official photo with the team and sponsor must be taken for documentation.
 
-### Co-Sponsors:
-- Dr. Osama Eljabiri
+### 👨‍🏫 Co-Sponsors
+
+- Dr. Osama Eljabiri  
 - Benjamin Shuster
 
-### Team Members:
-- Sebastian Alcock (Project Manager)
-- Anurag Agarwal
-- Justin Nguyen
+### 👥 Team Members
 
-### Team Composition:
-The ideal Capstone team to take over the remainder of this project would be one project manager, one backend developer, and one frontend developer. 
-- Project Manager: 
-    - Owns the roadmap, milestones, and day-to-day coordination. They’d work with your stakeholders to refine requirements (“what exactly goes into the approval flow?”, “how should the judging rubric be surfaced?”), break them down into sprint tasks, and keep everyone on schedule. They also run standup meetings. 
-- Backend Developer: 
-    - Fully owns the Flask service and database, writing and testing all new endpoints.
-- Frontend Developer: 
-    - Fully owns the React frontend, including all styling and components.
- 
-## Installation
+- **Sebastian Alcock** (Project Manager)  
+- **Anurag Agarwal**  
+- **Justin Nguyen**
 
-#### Prerequisities:
-- Python 3.0+ 
-- pip
-- DB Browser for SQLite (https://sqlitebrowser.org/)
+### 👨‍💻 Team Composition
+
+The ideal Capstone team to take over the remainder of this project would be:
+
+- **Project Manager**  
+  - Owns the roadmap, milestones, and day-to-day coordination.  
+  - Works with stakeholders to refine requirements.  
+  - Breaks down requirements into sprint tasks.  
+  - Runs standups.
+
+- **Backend Developer**  
+  - Owns the Flask service and database.  
+  - Writes and tests new endpoints.
+
+- **Frontend Developer**  
+  - Owns the React frontend.  
+  - Handles styling and component design.
+
+---
+
+## 🧪 Installation
+
+### 🔧 Prerequisites
+
+- Python 3.0+  
+- pip  
+- [DB Browser for SQLite](https://sqlitebrowser.org/)  
 - Git
 
-#### Cloning the Repository: 
-    git clone https://github.com/SebastianAlcock/sponsor-approvals-judging-process.git
-    pip install -r requirements.txt (this will install all required dependencies)
+### 📅 Cloning the Repository
 
-#### Install required backend dependencies:
-###### For backend, from parent folder run:
-    cd backend
-    pip install -r requirements.txt 
-###### For frontend, from parent folder run:
-    cd frontend
-    npm install
+```bash
+git clone https://github.com/SebastianAlcock/sponsor-approvals-judging-process.git
+pip install -r requirements.txt
+```
 
-#### Run the Application: 
-###### For backend, from parent folder run:
-    cd backend
-    python -m flask run
-###### For frontend, from parent folder run:
-    cd frontend
-    npm start
+### ⚙️ Install Dependencies
 
-## Backend
-This documentation covers the Flask-based backend API for automating sponsor approvals and the judging process in the Capstone program. It details installation instructions, configuration, and all available endpoints.
-- Flask documentation: https://flask.palletsprojects.com/en/stable/ 
+#### Backend:
 
-#### View the database:  
-2 methods: 
-- install DB Browser for SQLite and open the capstone.db file from this repo(preferred - gives a visualization for the DB)
-- use terminal to execute SQLite commands: 
-    - run sqlite3, .open capstone.db, .tables
+```bash
+cd backend
+pip install -r requirements.txt
+```
 
-#### Using the API routes 
-Use the following curl commands in your terminal to query the APIs while the application is running. Curl is a tool used to query APIs, similar to tools like Postman. Curl documentation: https://docs.oracle.com/en/cloud/saas/marketing/eloqua-develop/Developers/GettingStarted/APIRequests/curl-requests.htm#GET
+#### Frontend:
 
-#### 1. POST /register-student: Register a Student 
-What it does:
-- Registers a new student with inputted information.  
-<br>
-How it works:
+```bash
+cd frontend
+npm install
+```
 
-- Reads JSON payload via request.get_json().
+### ▶️ Run the Application
 
-- Hashes data['password'] with werkzeug.security.generate_password_hash.
+#### Backend:
 
-- Constructs a User(...) SQLAlchemy object.
+```bash
+cd backend
+python -m flask run
+```
 
-- Opens a Session(), session.add(new_user) + session.commit().
+#### Frontend:
 
-- On success returns 201 with a JSON message; on error rolls back and returns 400.
+```bash
+cd frontend
+npm start
+```
 
-Sample curl query: 
+---
+
+## 🧠 Backend Overview
+
+This documentation covers the **Flask-based backend API** for automating sponsor approvals and the judging process in the Capstone program.  
+🔗 [Flask Documentation](https://flask.palletsprojects.com/en/stable/)
+
+---
+
+### 📃 View the Database
+
+Two options:
+
+- Open `capstone.db` in **DB Browser for SQLite** *(recommended)*.  
+- Or use the terminal:
+  ```bash
+  sqlite3
+  .open capstone.db
+  .tables
+  ```
+
+---
+
+### 🌐 Using the API Routes
+
+You can use the following `curl` commands to interact with the API while the app is running.  
+🔗 [Curl Documentation](https://docs.oracle.com/en/cloud/saas/marketing/eloqua-develop/Developers/GettingStarted/APIRequests/curl-requests.htm#GET)
+
+---
+
+### 📬 1. `POST /register-student` – Register a Student
+
+**What it does:**  
+Registers a new student.
+
+**How it works:**
+
+- Reads JSON payload.  
+- Hashes the password.  
+- Creates and commits a new `User`.  
+- Returns 201 or 400.
+
+```bash
 curl -X POST http://127.0.0.1:5000/register-student \
 -H "Content-Type: application/json" \
 -d '{
@@ -107,24 +155,13 @@ curl -X POST http://127.0.0.1:5000/register-student \
     "minor": "Mathematics",
     "specialization": "Web Development"
 }'
+```
 
-#### 2. POST /register-sponsor: Register a Sponsor
-What it does:
-- Registers a new sponsor with inputted information.  
-<br>
-How it works:
+---
 
-- Reads JSON payload via request.get_json().
+### 🧑‍💼 2. `POST /register-sponsor` – Register a Sponsor
 
-- Hashes data['password'] with werkzeug.security.generate_password_hash.
-
-- Constructs a User(...) SQLAlchemy object.
-
-- Opens a Session(), session.add(new_user) + session.commit().
-
-- On success returns 201 with a JSON message; on error rolls back and returns 400.
-
-Sample curl query: 
+```bash
 curl -X POST http://127.0.0.1:5000/register-sponsor \
 -H "Content-Type: application/json" \
 -d '{
@@ -140,249 +177,229 @@ curl -X POST http://127.0.0.1:5000/register-sponsor \
     "org_website": "http://techcorp.com",
     "org_address": "123 Tech Park, Silicon Valley, CA"
 }'
+```
 
-#### 3. POST /login: Login a User 
-What it does: 
-- Authenticates an existing user using their email and password.  
-<br>
-How it works: 
+---
 
-- Reads JSON payload via request.get_json().
+### 🔐 3. `POST /login` – Login a User
 
-- Finds the user by email using session.query(User).filter_by(email=...).first().
-
-- Checks hashed password with werkzeug.security.check_password_hash.
-
-- On success, returns user info; on failure, returns 401 Unauthorized.
-
-Sample curl query: 
+```bash
 curl -X POST http://127.0.0.1:5000/login \
 -H "Content-Type: application/json" \
 -d '{
     "email": "mike.ema@google.com",
     "password": "password789"
 }'
+```
 
-#### 4. GET /users: Get All Users
-What it does: 
-- Retrieves all registered users from the database.  
-<br>
-How it works: 
+---
 
-- Queries all User entries from the database via session.query(User).all().
+### 👥 4. `GET /users` – Get All Users
 
-- Serializes all fields into a JSON list.
-
-- Returns 200 with list of users; returns 500 on error.
-
-Sample curl query:
+```bash
 curl -X GET http://127.0.0.1:5000/users
+```
 
-#### 5. GET /projects: Get All Projects
-What it does: 
-- Retrieves all projects in the database. 
-<br> 
-How it works: 
+---
 
-- Queries all Project entries in the database via session.query(Project).all().
+### 📁 5. `GET /projects` – Get All Projects
 
-- Serializes each project’s fields into a JSON list.
-
-- Returns 200 on success; 500 on error.
-
-Sample curl query: 
+```bash
 curl -X GET http://127.0.0.1:5000/projects
+```
 
-#### 6. GET /user/{email}: Get One User by ID
-What it does: 
-- Retrieves a specific user based on their ID.  
-<br>
-How it works: 
+---
 
-- session.query(User).filter_by(id=id).first() fetches the user.
+### 👤 6. `GET /user/{email}` – Get User by Email
 
-- If found, serializes user fields into JSON.
-
-- Returns 200 if user found, 404 if not found.
-
-Sample curl query: 
+```bash
 curl -X GET http://127.0.0.1:5000/user/alice.smith@example.com
+```
 
-#### 7. GET /project/{id}: Get One Project by ID
-What it does: 
-- Retrieves a specific project based on its ID.
-<br>
-How it works: 
+---
 
-- Session.query(Project).filter_by(id=id).first() fetches the project.
+### 📂 7. `GET /project/{id}` – Get Project by ID
 
-- If found, serializes project fields into JSON.
-
-- Returns 200 if found, 404 if not found.
-
-Sample curl query: 
+```bash
 curl -X GET http://127.0.0.1:5000/project/1
+```
 
-#### 8. POST /createproject: Create a New Project
-What it does: 
-- Creates a new project record in the system.
-<br>
-How it works: 
+---
 
-- Reads JSON payload with all project details.
+### ❌ 13. `DELETE /delete-all-approvals` – Clear All Approvals
 
-- Constructs a Project object with fields like year, semester, contact details, project details, etc.
-
-- session.add(new_project) and session.commit().
-
-- Returns 201 on success, 400 on failure.
-
-Sample curl query: 
-curl -X POST http://127.0.0.1:5000/createproject \
--H "Content-Type: application/json" \
--d '{
-    "year": 2025,
-    "semester": "Fall",
-    "org_name": "TechCorp",
-    "org_category": "Software",
-    "org_industry": "Technology",
-    "org_website": "http://techcorp.com",
-    "org_address": "123 Tech Park, Silicon Valley, CA",
-    "contact_first_name": "John",
-    "contact_last_name": "Doe",
-    "contact_position_title": "Project Manager",
-    "contact_phone": "123-456-7890",
-    "contact_email": "john.doe@techcorp.com",
-    "document": null,
-    "project_name": "AI Research",
-    "project_description": "Research on AI technologies for improving automation",
-    "project_criteria": "Must have knowledge of machine learning",
-    "project_skillset": "Python, TensorFlow, Neural Networks",
-    "project_instructions": "Follow the guidelines in the project brief",
-    "open_house": 1,
-    "employment_history": "Previous experience in AI projects",
-    "employment_opportunities": "Internship opportunities available",
-    "employment_benefits": "Salary and benefits provided",
-    "committed": 0,
-    "other_projects": "Data Science Project, AI Implementation",
-    "applied_students": [],
-    "approved_students": [],
-    "confirmed_students": []
-}'
-
-#### 9. PATCH /apply/{user_id}: Apply a User to a Project
-What it does: 
-- Allows a student to apply to a project.
-<br>
-How it works: 
-
-- Reads JSON payload to get the project ID.
-
-- Updates the user’s applied_projects and the project’s applied_students fields (both as JSON arrays).
-
-- session.commit() saves the change.
-
-Sample curl query: 
-curl -X PATCH http://127.0.0.1:5000/apply/1 \
--H "Content-Type: application/json" \
--d '{
-    "project_name": "AI Research"
-}'
-
-#### 10. PATCH /approve/{project_id, student_id}: Approve a Student for a Project
-What it does: 
-- Sponsor approves (or unapproves) a student for a project.
-<br>
-How it works: 
-
-- Toggles whether the student is approved for the given project ID.
-
-- Also records an entry into the Approval table (with project_id, user_id, submitter_id).
-
-- session.commit() saves changes.
-
-Sample curl query: 
-curl -X PATCH http://127.0.0.1:5000/approve/1/1 \
--H "Content-Type: application/json"
-
-#### 11. POST /approvals : Record a sponsor approval 
-What it does: 
-- Manually creates an approval record in the approvals database.
-<br>
-How it works:
-
-- Reads JSON payload with project_id, user_id, and submitter_id.
-
-- Creates a new Approval object and saves it with session.commit().
-
-Sample curl query: 
-curl -X POST http://127.0.0.1:5000/approvals \
-  -H "Content-Type: application/json" \
-  -d '{
-    "project_id": 3,
-    "user_id": 2,
-    "submitter_id": 3
-  }'
-
-#### 12. GET /approvals : Get all approval records
-What it does: 
-- Fetches all sponsor approvals recorded in the system.
-<br>
-How it works: 
-
-- Queries all Approval entries.
-
-- Joins the project, approved student, and submitter for each approval.
-
-- Returns 200 with a list of approvals (with human-readable names).
-
-Sample query: 
-curl -X GET http://127.0.0.1:5000/approvals
-
-#### 13. DELETE /delete-all-approvals: Delete all approval records
-What it does: 
-- Deletes all entries in the Approval table.
-<br>
-How it works: 
-
-- session.query(Approval).delete() removes all rows.
-
-- session.commit() finalizes the deletion.
-
-Sample curl query: 
+```bash
 curl -X DELETE http://127.0.0.1:5000/delete-all-approvals
+```
 
-#### 14. PATCH /commit/{user_id}: Commit a User to a Project
-What it does: 
-- Lets a student formally commit to one project.
-<br>
-How it works: 
+---
 
-- Checks if the student is already approved for the project.
+### 📌 14. `PATCH /commit/{user_id}` – Student Commitment
 
-- Updates user.committed_project and project.confirmed_students list.
-
-- session.commit() saves changes.
-
-Sample curl query: 
+```bash
 curl -X PATCH http://127.0.0.1:5000/commit/1 \
 -H "Content-Type: application/json" \
 -d '{
     "project_name": "AI Research"
 }'
+```
 
-## Frontend
+---
 
-    TODO: Explain all pages and page functions (excluding styles but explain style folder)
+## Frontend Documentation: Automation Dashboard for Capstone Sponsor Approvals
 
-## Current Issues or Challenges
+### Tools & Technologies Used
 
-    TODO:
+| Tool/Library | Purpose | Link |
+|--------------|---------|------|
+| [React.js](https://reactjs.org/) | Frontend library used for building the UI | https://reactjs.org/ |
+| [React Router](https://reactrouter.com/en/main) | Enables navigation between views | https://reactrouter.com/ |
+| [Axios](https://axios-http.com/docs/intro) | Handles API requests | https://axios-http.com/ |
+| [React Data Grid](https://react-data-grid.github.io/) | Displays data tables | https://react-data-grid.github.io/ |
+| [Framer Motion](https://www.framer.com/motion/) | Adds UI animations | https://www.framer.com/motion/ |
+| [Toastify](https://fkhadra.github.io/react-toastify/introduction) | Notification popups | https://fkhadra.github.io/react-toastify/introduction |
+| [VSCode](https://code.visualstudio.com/) | Recommended IDE | https://code.visualstudio.com/ |
+| [Node.js](https://nodejs.org/en) | Needed to run the frontend | https://nodejs.org/en |
+| [GitHub](https://github.com/) | Code hosting and collaboration | https://github.com/ |
 
-## Unfulfilled Requirements
+---
 
-    TODO:
+### Project Structure
 
-## Future Plans
+```
+frontend/
+│
+├── src/
+│   ├── pages/            # Main page components (Home, Login, Signup, etc.)
+│   ├── services/         # Axios instance
+│   ├── styles/           # All .css stylesheets
+│   ├── App.js            # Main component with router config
+│   └── index.js          # Root React entry
+```
 
-    TODO:
+---
+
+### Page-by-Page Functionality
+
+#### 1. `Home.jsx`
+- Displays a welcome message.
+- Uses `localStorage` to greet the current user.
+- Place to display important links or Capstone deadlines.
+
+#### 2. `Login.jsx` & `Signup.jsx`
+- Sends credentials to backend API.
+- Stores user in `localStorage` upon success.
+- Role-based form rendering (student vs. sponsor).
+
+#### 3. `Directory.jsx`
+- DataGrid-based dashboard.
+- Tabs to view:
+  - Active Projects
+  - All Projects
+  - Students
+  - Sponsors
+  - Approvals
+- Eye icon navigates to detail pages.
+- Admins can toggle semester and year filters.
+
+#### 4. `Applications.jsx`
+- Gateway for role-based application tools.
+- Displays:
+  - Sponsor Proposal Form
+  - Sponsor Approval Form (filtered by organization)
+
+#### 5. `Proposal.jsx`
+- Collects full project and sponsor details.
+- Sends data to `/createproject` backend route.
+- Includes checkbox and file upload logic.
+
+#### 6. `Approval.jsx`
+- Allows sponsors/admins to approve student applications.
+- Auto-fills fields based on logged-in user.
+- Conditionally renders dropdowns based on sponsor org and project.
+
+#### 7. `Project.jsx`
+- Detailed view of a single project.
+- Includes: description, criteria, skillsets, contact info, and student applicants.
+- Buttons:
+  - Students can Apply / Commit
+  - Admins can Edit / Delete
+
+#### 8. `User.jsx`
+- Displays user profile (student/sponsor)
+- Includes tables for applied, approved, and committed projects.
+- Admins and users themselves can edit or delete profile.
+
+#### 9. `EditUser.jsx` & `EditProject.jsx`
+- Dynamic forms that load current data.
+- Role-based access control logic in place.
+- Save changes via PATCH request.
+
+#### 10. `Navbar.jsx`
+- Top bar used across all pages.
+- Updates active tab via `currentPage` prop.
+- Logout functionality clears `localStorage` and redirects.
+
+---
+
+### Styling (CSS Folder)
+- `styles/Directory.css`: Used for directory layout and table overrides.
+- `styles/Form.css`: Shared by all forms (Signup, Proposal, Approval).
+- `styles/Navbar.css`, `Login.css`, `Signup.css`, etc. for page-specific designs.
+
+---
+
+### Known Issues & Limitations
+
+- **No Role Protection on Signup**: Users can choose whatever role they want to and also pick admin status for themselves.
+- **Not Mobile Optimized**: DataGrid and form layouts break on small screens.
+- **No JWT Authentication**: Current auth system stores user data in `localStorage` only, not secure.
+
+---
+
+### Design Decisions
+
+- **Single Site > Discord/Formsite**: Moving all workflows to one site ensures:
+  - Real-time approval updates
+  - Cleaner audit trail (e.g., `approvals` table)
+  - Easier onboarding for sponsors
+- **Role-Based Access Control**: Logic in each page ensures only the appropriate user can view/edit content.
+- **Separation of Concerns**: React handles rendering + routing; Flask handles logic + data.
+- **One Project Commitment**: Prevents accidental overcommitment from students.
+- **Framer Motion Animations**: Adds polish to transitions (e.g., welcome message).
+
+---
+
+### Unfulfilled Requirements
+
+| Feature | Reason Not Completed |
+|--------|----------------------|
+| Track Selection Forms | Needed new route/model + UI |
+| Judge Dashboard | Out of scope for MVP |
+| Sponsor Account Verification | No email service or code verification yet |
+| Student Resume Uploads | File upload logic not complete |
+| Admin Bulk Imports | Would require CSV parsing + database merge logic |
+
+---
+
+### Future Stretch Goals
+
+- **Full Admin Dashboard**: Drag-and-drop assignments, export tools, search filters.
+- **JWT Auth + Refresh Tokens**: Replace `localStorage` with secure cookie-based auth.
+- **Judging Rubric Module**: Admins create rubrics, judges score directly on the platform.
+- **Sponsor Analytics Dashboard**: Track engagement across semesters.
+- **Automated Resume Parsing**: Integrate tools to parse resumes
+- **Document Upload + Preview**: Allow uploaded PDFs to preview within the browser.
+
+---
+
+### Resources
+
+- **GitHub Repo**: https://github.com/SebastianAlcock/sponsor-approvals-judging-process
+- **SQLite**: https://www.sqlite.org/docs.html
+- **VSCode**: https://code.visualstudio.com/
+- **DB Browser for SQLite**: https://sqlitebrowser.org/
+- **React Docs**: https://reactjs.org/docs/getting-started.html
+- **Axios Docs**: https://axios-http.com/docs/intro
+- **Framer Motion**: https://www.framer.com/motion/
+- **Toastify**: https://fkhadra.github.io/react-toastify/introduction/
